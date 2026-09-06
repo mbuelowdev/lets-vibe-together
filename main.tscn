@@ -1,3 +1,41 @@
-[gd_scene format=3]
+[gd_scene load_steps=3 format=3]
 
-[node name="Main" type="Node"]
+[ext_resource type="Script" uid="uid://8l7sod7y5rsf" path="res://playfield.gd" id="1_playfield"]
+[ext_resource type="Script" uid="uid://b6fl7xe0701a6" path="res://player.gd" id="2_player"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Playfield" type="Node2D" parent="."]
+script = ExtResource("1_playfield")
+
+[node name="Landmarks" type="Node2D" parent="."]
+
+[node name="RockNorthwest" type="Polygon2D" parent="Landmarks"]
+position = Vector2(-280, -220)
+color = Color(0.25, 0.25, 0.25, 1)
+polygon = PackedVector2Array(-80, -40, 80, -40, 80, 40, -80, 40)
+
+[node name="PeakNortheast" type="Polygon2D" parent="Landmarks"]
+position = Vector2(300, -200)
+color = Color(0.72, 0.72, 0.72, 1)
+polygon = PackedVector2Array(0, -80, 90, 70, -90, 70)
+
+[node name="SlabSouthwest" type="Polygon2D" parent="Landmarks"]
+position = Vector2(-260, 250)
+color = Color(0.32, 0.32, 0.34, 1)
+polygon = PackedVector2Array(0, -70, 70, 0, 0, 70, -70, 0)
+
+[node name="BarSoutheast" type="Polygon2D" parent="Landmarks"]
+position = Vector2(280, 240)
+color = Color(0.55, 0.52, 0.48, 1)
+polygon = PackedVector2Array(-100, -25, 100, -25, 100, 25, -100, 25)
+
+[node name="MarkerNorth" type="Polygon2D" parent="Landmarks"]
+position = Vector2(0, -340)
+color = Color(0.2, 0.2, 0.2, 1)
+polygon = PackedVector2Array(-20, -80, 20, -80, 20, 40, 80, 40, 80, 80, -20, 80)
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("2_player")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
