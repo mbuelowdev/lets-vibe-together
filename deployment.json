@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "name": "mbuelow.dev/lets-vibe-together",
+  "tag": "latest",
+  "url": "https://lets-vibe-together.mbuelow.dev",
+  "informDiscord": true,
+  "_documentation1": "The arguments are being passed to docker run. They can be empty.",
+  "_documentation2": "You can mount custom stuff via the path /deployments/mbuelow_dev_lets_vibe_together/.",
+  "_documentation3": "0.0.0.0 exposes the service publicly and 172.17.0.1 internally",
+  "deployImages": []
+}
