@@ -7,5 +7,13 @@
   "_documentation1": "The arguments are being passed to docker run. They can be empty.",
   "_documentation2": "You can mount custom stuff via the path /deployments/mbuelow_dev_lets_vibe_together/.",
   "_documentation3": "0.0.0.0 exposes the service publicly and 172.17.0.1 internally",
-  "deployImages": []
+  "deployImages": [
+    {
+      "name": "mbuelow.dev/lets-vibe-together",
+      "tag": "latest",
+      "argPorts": "-p 172.17.0.1:16015:80",
+      "argVolumes": "",
+      "argExtra": ""
+    }
+  ]
 }

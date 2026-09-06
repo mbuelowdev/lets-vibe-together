@@ -1,0 +1,6 @@
+.git
+.github
+.godot
+.idea
+build
+*.md
