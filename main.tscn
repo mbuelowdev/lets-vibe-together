@@ -1,3 +1,49 @@
-[gd_scene format=3]
+[gd_scene load_steps=7 format=3]
 
-[node name="Main" type="Node"]
+[ext_resource type="Script" uid="uid://b62ndkb4adohj" path="res://main.gd" id="1_script"]
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 1
+background_color = Color(0.48, 0.68, 0.88, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.78, 0.8, 0.85, 1)
+ambient_light_energy = 0.55
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(48, 48)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.28, 0.42, 0.26, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
+radius = 0.4
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_player"]
+albedo_color = Color(0.18, 0.42, 0.86, 1)
+roughness = 0.45
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 6, 12, 8)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 16)
+current = true
+fov = 60.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_ground")
+surface_material_override/0 = SubResource("StandardMaterial3D_ground")
+
+[node name="Player" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("CapsuleMesh_player")
+surface_material_override/0 = SubResource("StandardMaterial3D_player")
