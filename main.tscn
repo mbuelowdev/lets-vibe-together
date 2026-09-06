@@ -5,7 +5,7 @@
 
 [node name="Main" type="Node2D"]
 
-[node name="Background" type="Node2D" parent="."]
+[node name="Background" type="Sprite2D" parent="."]
 script = ExtResource("1_background")
 
 [node name="Player" type="Node2D" parent="."]

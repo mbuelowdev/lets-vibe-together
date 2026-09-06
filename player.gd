@@ -2,8 +2,8 @@ extends Node2D
 
 const SPEED := 360.0
 const RADIUS := 22.0
-const FILL := Color(1.0, 0.82, 0.12, 1.0)
-const OUTLINE := Color(0.12, 0.07, 0.02, 1.0)
+const FILL := Color(0.12, 0.36, 0.92, 1.0)
+const OUTLINE := Color(0.04, 0.08, 0.18, 1.0)
 
 func _ready() -> void:
 	var camera := get_node("Camera2D") as Camera2D
