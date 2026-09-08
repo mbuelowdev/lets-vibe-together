@@ -1,0 +1,51 @@
+[
+  {
+    "name": "World and player circle exist at world center on boot",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().hasBackground", "equals": true },
+      { "expect": "window.__egon.state().worldWidth", "at_least": 3456 },
+      { "expect": "window.__egon.state().playerX", "equals": 1728 },
+      { "expect": "window.__egon.state().playerY", "equals": 972 },
+      { "screenshot": "boot-world-and-player" }
+    ]
+  },
+  {
+    "name": "D key presses move the player right and count as moves",
+    "scenario": "default",
+    "proof": "video",
+    "record_ms": 6000,
+    "steps": [
+      { "await": "window.__egon.state().hasBackground", "equals": true },
+      { "expect": "window.__egon.state().moveCount", "equals": 0 },
+      { "press": "KeyD" },
+      { "press": "KeyD" },
+      { "press": "KeyD" },
+      { "press": "KeyD" },
+      { "press": "KeyD" },
+      { "press": "KeyD" },
+      { "expect": "window.__egon.state().moveCount", "at_least": 6 },
+      { "expect": "window.__egon.state().playerX", "at_least": 1760 },
+      { "expect": "window.__egon.state().playerY", "equals": 972 }
+    ]
+  },
+  {
+    "name": "Smoothed camera follows the player downward",
+    "scenario": "default",
+    "proof": "video",
+    "record_ms": 6000,
+    "steps": [
+      { "await": "window.__egon.state().hasBackground", "equals": true },
+      { "expect": "window.__egon.state().cameraSmoothingEnabled", "equals": true },
+      { "press": "KeyS" },
+      { "press": "KeyS" },
+      { "press": "KeyS" },
+      { "press": "KeyS" },
+      { "press": "KeyS" },
+      { "press": "KeyS" },
+      { "expect": "window.__egon.state().playerY", "at_least": 1004 },
+      { "await": "window.__egon.state().cameraY", "at_least": 1000, "timeout_ms": 5000 }
+    ]
+  }
+]
