@@ -17,3 +17,7 @@ run/main_scene="res://main.tscn"
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
+
+[autoload]
+
+EgonBridge="*res://egon/egon_bridge.gd"
