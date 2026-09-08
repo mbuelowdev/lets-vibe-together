@@ -18,7 +18,7 @@ scenario suite with no agent in the loop.
 ]
 ```
 
-A step is exactly one of `press`, `click` / `move` (`[x, y]` in a 960×540 viewport),
+A step is exactly one of `press`, `click` / `move` (`[x, y]` in a 640×360 viewport),
 `drag`, `await`, `expect`, or `screenshot`. `await` and `expect` take one comparator:
 `equals`, `at_least`, `at_most`, `changed_by`, or `contains`.
 

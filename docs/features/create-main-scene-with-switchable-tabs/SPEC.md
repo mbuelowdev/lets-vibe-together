@@ -158,7 +158,7 @@ func _on_app_selected(app_id: String) -> void   # sets Background.color, increme
 
 - The game map describes a merged tree with `world.tscn`/`player.tscn` and `main.gd` bridge fields (`playerX`, `moveCount`, …). None of those files exist in this branch; `main.tscn` is a bare `Node`. Write `main.gd` fresh and do not register or reference those fields.
 - Changing the viewport from the Godot default (1152×648, stretch `disabled`) to 320×180 `canvas_items`/`keep`/`integer` is intentional and now the project-wide art-style baseline: 320×180 pixel-art canvas, nearest-neighbour, integer upscale.
-- At the runner's 960×540 window the integer scale is exactly 3× with no letterboxing, so base pixel `(x, y)` maps to window pixel `(3x, 3y)`.
+- At the runner's 640×360 window the integer scale is exactly 2× with no letterboxing, so base pixel `(x, y)` maps to window pixel `(2x, 2y)`.
 - Import both PNGs with `filter=false` / nearest and mipmaps off so the upscale stays crisp; if the editor default re-enables filtering, set it per-texture in the `.import` file.
 - Derive the icon atlas regions from the sheet's measured dimensions (`texture.get_width() / 2`, `texture.get_height() / 4`) instead of hard-coding pixel offsets, so a differently sized sheet still slices into 4 rows × 2 columns.
 - Use `TextureButton` so clicks come through the normal GUI path; keep `Taskbar`, `Base` and `Background` at `MOUSE_FILTER_IGNORE` so only the four buttons consume input.
