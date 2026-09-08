@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" uid="uid://c5xslwbjkljpa" path="res://player.gd" id="1_player"]
+[ext_resource type="Texture2D" uid="uid://boqbhcy4mdeyq" path="res://assets/library/image/portrait-of-egon.webp" id="2_portrait"]
+
+[node name="Player" type="Node2D"]
+script = ExtResource("1_player")
+
+[node name="Outline" type="Polygon2D" parent="."]
+color = Color(0.0705882, 0.129412, 0.121569, 1)
+
+[node name="Mask" type="Polygon2D" parent="."]
+clip_children = 1
+
+[node name="Portrait" type="Sprite2D" parent="Mask"]
+texture = ExtResource("2_portrait")
+centered = true
+scale = Vector2(0.09375, 0.09375)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = true
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0
+limit_left = 0
+limit_top = 0
+limit_right = 3456
+limit_bottom = 1944
+limit_smoothed = true
+drag_horizontal_enabled = false
+drag_vertical_enabled = false
