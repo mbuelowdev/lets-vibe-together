@@ -1,0 +1,43 @@
+[
+  {
+    "name": "boots into 2D world with player at center",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().hasBackground", "equals": true },
+      { "expect": "window.__egon.state().worldWidth", "equals": 2880 },
+      { "expect": "window.__egon.state().playerX", "equals": 1440 },
+      { "expect": "window.__egon.state().playerY", "equals": 810 },
+      { "expect": "window.__egon.state().cameraSmoothingEnabled", "equals": true },
+      { "expect": "window.__egon.state().cameraLagPx", "equals": 0 },
+      { "expect": "window.__egon.state().moveCount", "equals": 0 },
+      { "screenshot": "boot-player-on-teal-ground" }
+    ]
+  },
+  {
+    "name": "WASD tap moves player and camera catches up",
+    "scenario": "default",
+    "proof": "video",
+    "record_ms": 8000,
+    "steps": [
+      { "await": "window.__egon.state().playerX", "equals": 1440 },
+      { "press": "KeyD" },
+      { "expect": "window.__egon.state().moveCount", "at_least": 1 },
+      { "expect": "window.__egon.state().playerX", "at_least": 1488 },
+      { "expect": "window.__egon.state().cameraLagPx", "equals": 0 }
+    ]
+  },
+  {
+    "name": "arrow keys move the player",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().playerY", "equals": 810 },
+      { "press": "ArrowDown" },
+      { "expect": "window.__egon.state().moveCount", "at_least": 1 },
+      { "expect": "window.__egon.state().playerY", "at_least": 858 },
+      { "expect": "window.__egon.state().cameraLagPx", "equals": 0 },
+      { "screenshot": "arrow-down-moved" }
+    ]
+  }
+]
