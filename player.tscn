@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://player.gd" id="1_player"]
+[ext_resource type="Texture2D" path="res://assets/library/images/portrait-of-egon.webp" id="2_portrait"]
+
+[node name="Player" type="Node2D"]
+z_index = 10
+position = Vector2(1440, 810)
+script = ExtResource("1_player")
+
+[node name="Outline" type="Polygon2D" parent="."]
+z_index = -1
+color = Color(0.101961, 0.137255, 0.196078, 1)
+polygon = PackedVector2Array(34, 0, 31.4119, 13.01124, 24.04163, 24.04163, 13.01124, 31.4119, 0, 34, -13.01124, 31.4119, -24.04163, 24.04163, -31.4119, 13.01124, -34, 0, -31.4119, -13.01124, -24.04163, -24.04163, -13.01124, -31.4119, 0, -34, 13.01124, -31.4119, 24.04163, -24.04163, 31.4119, -13.01124)
+
+[node name="Clip" type="Node2D" parent="."]
+clip_children = 2
+
+[node name="Mask" type="Polygon2D" parent="Clip"]
+color = Color(1, 1, 1, 1)
+polygon = PackedVector2Array(32, 0, 29.56415, 12.24587, 22.62742, 22.62742, 12.24587, 29.56415, 0, 32, -12.24587, 29.56415, -22.62742, 22.62742, -29.56415, 12.24587, -32, 0, -29.56415, -12.24587, -22.62742, -22.62742, -12.24587, -29.56415, 0, -32, 12.24587, -29.56415, 22.62742, -22.62742, 29.56415, -12.24587)
+
+[node name="Portrait" type="Sprite2D" parent="Clip"]
+texture_filter = 2
+position = Vector2(0, 0)
+scale = Vector2(0.0625, 0.0625)
+texture = ExtResource("2_portrait")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
