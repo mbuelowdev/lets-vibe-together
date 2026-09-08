@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Hovering an unselected app icon shows the unselected-hover variant",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().hoverEnterCount", "equals": 0 },
+      { "move": [96, 328] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "steam" },
+      { "expect": "window.__egon.state().hoverEnterCount", "at_least": 1 },
+      { "expect": "window.__egon.state().hoveredIconColumn", "equals": 2 },
+      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "screenshot": "hover-unselected-steam" }
+    ]
+  },
+  {
+    "name": "Hovering the selected app icon shows the selected-hover variant",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "move": [32, 328] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "home" },
+      { "expect": "window.__egon.state().hoveredIconColumn", "equals": 3 },
+      { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },
+      { "screenshot": "hover-selected-home" }
+    ]
+  },
+  {
+    "name": "Moving off the taskbar clears the hover state",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "move": [160, 328] },
+      { "await": "window.__egon.state().hoveredApp", "equals": "chrome" },
+      { "move": [500, 100] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "" },
+      { "expect": "window.__egon.state().hoveredIconColumn", "equals": -1 },
+      { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },
+      { "screenshot": "hover-cleared" }
+    ]
+  }
+]
