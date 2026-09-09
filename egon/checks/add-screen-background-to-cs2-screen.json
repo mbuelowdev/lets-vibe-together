@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Boot shows no screen artwork and layers the taskbar above the screen node",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().screenVisible", "equals": false },
+      { "expect": "window.__egon.state().screenTexture", "equals": "" },
+      { "expect": "window.__egon.state().taskbarAboveScreen", "equals": true },
+      { "screenshot": "boot-no-screen-art" }
+    ]
+  },
+  {
+    "name": "Selecting cs2 shows the cs2 screen art across the full canvas under the taskbar",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "click": [112, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
+      { "expect": "window.__egon.state().screenVisible", "equals": true },
+      { "expect": "window.__egon.state().screenTexture", "contains": "screen-base-cs2.png" },
+      { "expect": "window.__egon.state().screenTextureSize", "equals": "640x360" },
+      { "expect": "window.__egon.state().taskbarVisible", "equals": true },
+      { "screenshot": "cs2-screen-art" }
+    ]
+  },
+  {
+    "name": "Switching back to home hides the screen art and restores the flat colour",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "click": [112, 344] },
+      { "await": "window.__egon.state().screenVisible", "equals": true },
+      { "click": [16, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().screenVisible", "equals": false },
+      { "expect": "window.__egon.state().screenTexture", "equals": "" },
+      { "expect": "window.__egon.state().backgroundColor", "equals": "#2e4272" },
+      { "screenshot": "back-to-home-flat" }
+    ]
+  }
+]

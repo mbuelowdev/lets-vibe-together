@@ -5,7 +5,7 @@
     "proof": "screenshot",
     "steps": [
       { "await": "window.__egon.state().hoverEnterCount", "equals": 0 },
-      { "move": [96, 328] },
+      { "move": [48, 344] },
       { "expect": "window.__egon.state().hoveredApp", "equals": "steam" },
       { "expect": "window.__egon.state().hoverEnterCount", "at_least": 1 },
       { "expect": "window.__egon.state().hoveredIconColumn", "equals": 2 },
@@ -19,7 +19,7 @@
     "proof": "screenshot",
     "steps": [
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
-      { "move": [32, 328] },
+      { "move": [16, 344] },
       { "expect": "window.__egon.state().hoveredApp", "equals": "home" },
       { "expect": "window.__egon.state().hoveredIconColumn", "equals": 3 },
       { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },
@@ -31,7 +31,7 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
-      { "move": [160, 328] },
+      { "move": [80, 344] },
       { "await": "window.__egon.state().hoveredApp", "equals": "chrome" },
       { "move": [500, 100] },
       { "expect": "window.__egon.state().hoveredApp", "equals": "" },
