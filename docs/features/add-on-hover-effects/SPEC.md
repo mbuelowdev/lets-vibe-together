@@ -49,11 +49,13 @@ app is selected or which background color is showing.
 
 ### Existing patterns / conventions
 
-- `taskbar.gd` builds everything in code from a single sheet via `_make_atlas(sheet, col, row, cell_w, cell_h)`
-  returning an `AtlasTexture` with `filter_clip = true`; keep that helper and keep column/row indices
-  as its arguments rather than hard-coded `Rect2`s.
-- Icon geometry is code-driven from `ICON_DRAW_SIZE = 32` in `_configure_button()`; do not move the
-  buttons or set offsets in `taskbar.tscn`.
+- `taskbar.gd` builds the selection and hover textures in code from a single sheet via
+  `_make_atlas(sheet, col, row, cell_w, cell_h)` returning an `AtlasTexture` with `filter_clip = true`;
+  keep that helper and keep column/row indices as its arguments rather than hard-coded `Rect2`s. The
+  resting textures are separate baked sub-resources in `taskbar.tscn` (see the §6 amendment).
+- Icon geometry lives in `taskbar.tscn`: each button carries its own offsets and a 32×32
+  `custom_minimum_size`. Do not move it back into code. This line originally read that geometry was
+  code-driven from `ICON_DRAW_SIZE = 32` in `_configure_button()`; both are gone.
 - `main.gd` registers every bridge field in one `_register_bridge_fields()` call site using
   `get_node("/root/EgonBridge")` — follow that exactly; `taskbar.gd` itself registers nothing.
 - Textures use `texture_filter = TEXTURE_FILTER_NEAREST` everywhere for the pixel-art look; the hover
@@ -66,7 +68,7 @@ app is selected or which background color is showing.
   left-to-right are: `0` unselected, `1` selected, `2` unselected-hover, `3` selected-hover. Cells are
   square and equal-sized: derive `cell_w = sheet.get_width() / 4.0` and `cell_h = sheet.get_height() / 4.0`
   rather than hard-coding pixel numbers. Each cell is drawn into a 32×32 button rect
-  (`ICON_DRAW_SIZE`) with `ignore_texture_size = true` and `STRETCH_SCALE`, so the implementer does not
+  (sized in `taskbar.tscn`) with `ignore_texture_size = true` and `STRETCH_SCALE`, so the implementer does not
   need to rescale the image itself. Import settings: nearest/lossless, mipmaps off, same as the
   currently imported sheet.
 
@@ -141,6 +143,22 @@ Behavior contract:
   the only such place today.
 - Keep `filter_clip = true` on the new atlases so neighbouring sheet columns never bleed in at nearest
   filtering.
+
+### Amendment — 2026-09-09: icon geometry and resting textures moved into the scene
+
+`taskbar.tscn` was a 640×0 rect as saved, because `taskbar.gd` built the layout in `_ready()` and the
+editor does not run non-`@tool` scripts — so the taskbar did not appear in the editor preview. Button
+offsets, `custom_minimum_size`, and each button's resting `texture_normal` (an `AtlasTexture`
+sub-resource; `AppHome` uses column 1, matching the boot selection) are now baked into the scene, and
+`_configure_button()` and `ICON_DRAW_SIZE` are gone. See the matching amendment in
+`docs/features/create-main-scene-with-switchable-tabs/SPEC.md` §6.
+
+What this section describes is otherwise unchanged: `_build_atlas_textures()` still measures the sheet
+and `_refresh_icon_textures()` still drives every state swap, so `hovered_icon_column()` and
+`selected_icon_count()` keep reporting from live `texture_normal` identity. One behavioural change:
+`_refresh_icon_textures()` now returns early when `_normal_textures` is empty. Previously a missing or
+unreadable sheet made `_build_atlas_textures()` bail and the next line index an empty array, crashing
+at boot; the baked resting textures are now the fallback instead.
 
 ## 7. Verification hooks
 

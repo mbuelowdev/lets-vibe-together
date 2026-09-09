@@ -1,0 +1,126 @@
+[
+  {
+    "name": "Home offers Delete local save directly above Save & Quit, and it asks before it wipes anything",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
+      { "expect": "window.__egon.state().saveQuitButtonVisible", "equals": true },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "expect": "window.__egon.state().rubles", "equals": 4242 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "click": [320, 236] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "expect": "window.__egon.state().confirmDeleteMessage", "contains": "All progress will be lost!" },
+      { "expect": "window.__egon.state().rubles", "equals": 4242 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "screenshot": "delete-save-confirm" }
+    ]
+  },
+  {
+    "name": "Cancel leaves the save alone and hands focus back to the button that asked",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
+      { "click": [320, 236] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "expect": "window.__egon.state().focusedControl", "equals": "ConfirmCancelButton" },
+      { "click": [392, 216] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "expect": "window.__egon.state().focusedControl", "equals": "DeleteSaveButton" },
+      { "expect": "window.__egon.state().rubles", "equals": 4242 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "screenshot": "delete-save-cancelled" }
+    ]
+  },
+  {
+    "name": "Escape dismisses the question the same way Cancel does",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
+      { "click": [320, 236] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "press": "Escape" },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "expect": "window.__egon.state().rubles", "equals": 4242 },
+      { "screenshot": "delete-save-escaped" }
+    ]
+  },
+  {
+    "name": "Confirming deletes the file and puts the balance back to the starting amount",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().rubles", "equals": 4242 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "click": [320, 236] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "click": [248, 216] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "expect": "window.__egon.state().rubles", "equals": 1337 },
+      { "expect": "window.__egon.state().moneyText", "equals": "1  337  ₽" },
+      { "expect": "window.__egon.state().saveFileExists", "equals": false },
+      { "screenshot": "delete-save-confirmed" }
+    ]
+  },
+  {
+    "name": "The deletion sticks: the state is left clean, so no autosave tick writes the file back",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().saveFileExists", "equals": true },
+      { "expect": "window.__egon.state().savedRubles", "equals": 4242 },
+      { "click": [320, 236] },
+      { "click": [248, 216] },
+      { "expect": "window.__egon.state().autosaveEnabled", "equals": true },
+      { "expect": "window.__egon.state().savePending", "equals": false },
+      { "expect": "window.__egon.state().savedRubles", "equals": -1 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": false },
+      { "expect": "window.__egon.state().rubles", "equals": 1337 },
+      { "screenshot": "delete-save-stays-deleted" }
+    ]
+  },
+  {
+    "name": "The question is modal: the taskbar behind the shade does not take the click",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "click": [320, 236] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "click": [112, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().appSwitchCount", "equals": 0 },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "screenshot": "delete-save-modal" }
+    ]
+  },
+  {
+    "name": "Both the button and the question follow the language dropdown",
+    "scenario": "saved_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().locale", "equals": "de" },
+      { "click": [320, 236] },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "expect": "window.__egon.state().confirmDeleteMessage", "contains": "Fortschritt geht verloren" },
+      { "screenshot": "delete-save-localised" }
+    ]
+  },
+  {
+    "name": "Delete local save belongs to Home and leaves with it",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
+      { "click": [112, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
+      { "expect": "window.__egon.state().deleteSaveButtonVisible", "equals": false },
+      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "screenshot": "delete-save-home-only" }
+    ]
+  }
+]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://da6b3wuxy8cqj"
-path="res://.godot/imported/taskbar-app-icons.png-8935b0e30235b41ef0cbe0c8e1c02e11.ctex"
+uid="uid://dpajuphm1ov2c"
+path="res://.godot/imported/taskbar-base.png-ccaae8a394144865c5356dda4263246d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/library/image/taskbar-app-icons.png"
-dest_files=["res://.godot/imported/taskbar-app-icons.png-8935b0e30235b41ef0cbe0c8e1c02e11.ctex"]
+source_file="res://assets/images/taskbar-base.png"
+dest_files=["res://.godot/imported/taskbar-base.png-ccaae8a394144865c5356dda4263246d.ctex"]
 
 [params]
 

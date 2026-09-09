@@ -1,7 +1,34 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" path="res://taskbar.gd" id="1_taskbar"]
-[ext_resource type="Texture2D" path="res://assets/library/image/taskbar-base.png" id="2_base"]
+[ext_resource type="Script" uid="uid://xiqoh8l2bfd4" path="res://taskbar.gd" id="1_taskbar"]
+[ext_resource type="Texture2D" uid="uid://dpajuphm1ov2c" path="res://assets/images/taskbar-base.png" id="2_base"]
+[ext_resource type="Texture2D" uid="uid://da6b3wuxy8cqj" path="res://assets/images/taskbar-app-icons.png" id="3_icons"]
+[ext_resource type="Texture2D" uid="uid://dolt1dtsacus" path="res://assets/images/taskbar-util-icons.png" id="4_utils"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_home"]
+atlas = ExtResource("3_icons")
+region = Rect2(32, 0, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_steam"]
+atlas = ExtResource("3_icons")
+region = Rect2(0, 32, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chrome"]
+atlas = ExtResource("3_icons")
+region = Rect2(0, 64, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cs2"]
+atlas = ExtResource("3_icons")
+region = Rect2(0, 96, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_volume"]
+atlas = ExtResource("4_utils")
+region = Rect2(64, 0, 32, 32)
+filter_clip = true
 
 [node name="Taskbar" type="Control"]
 layout_mode = 3
@@ -9,6 +36,7 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -32.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
@@ -24,7 +52,7 @@ grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("2_base")
 expand_mode = 1
-stretch_mode = 1
+stretch_mode = 0
 texture_filter = 1
 
 [node name="Apps" type="Control" parent="."]
@@ -37,44 +65,147 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="AppHome" type="TextureButton" parent="Apps"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_top = -32.0
 offset_right = 32.0
+focus_neighbor_left = NodePath("../AppCs2")
+focus_neighbor_right = NodePath("../AppSteam")
+texture_normal = SubResource("AtlasTexture_home")
 ignore_texture_size = true
 stretch_mode = 0
 texture_filter = 1
 
 [node name="AppSteam" type="TextureButton" parent="Apps"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 32.0
 offset_top = -32.0
 offset_right = 64.0
+focus_neighbor_left = NodePath("../AppHome")
+focus_neighbor_right = NodePath("../AppChrome")
+texture_normal = SubResource("AtlasTexture_steam")
 ignore_texture_size = true
 stretch_mode = 0
 texture_filter = 1
 
 [node name="AppChrome" type="TextureButton" parent="Apps"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 64.0
 offset_top = -32.0
 offset_right = 96.0
+focus_neighbor_left = NodePath("../AppSteam")
+focus_neighbor_right = NodePath("../AppCs2")
+texture_normal = SubResource("AtlasTexture_chrome")
 ignore_texture_size = true
 stretch_mode = 0
 texture_filter = 1
 
 [node name="AppCs2" type="TextureButton" parent="Apps"]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 96.0
 offset_top = -32.0
 offset_right = 128.0
+focus_neighbor_left = NodePath("../AppChrome")
+focus_neighbor_right = NodePath("../AppHome")
+texture_normal = SubResource("AtlasTexture_cs2")
 ignore_texture_size = true
 stretch_mode = 0
 texture_filter = 1
+
+[node name="Utils" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Money" type="Label" parent="Utils"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -172.0
+offset_top = -32.0
+offset_right = -92.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_font_sizes/font_size = 12
+text = "1  337"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="MoneySign" type="Label" parent="Utils"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -88.0
+offset_top = -30.0
+offset_right = -76.0
+offset_bottom = 2.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_font_sizes/font_size = 12
+text = "₽"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Divider" type="ColorRect" parent="Utils"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -72.0
+offset_top = -24.0
+offset_right = -71.0
+offset_bottom = -8.0
+mouse_filter = 2
+color = Color(0.23921569, 0.24705882, 0.25882353, 1)
+
+[node name="Volume" type="TextureRect" parent="Utils"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -68.0
+offset_top = -32.0
+offset_right = -36.0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_volume")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 1
+
+[node name="Clock" type="Label" parent="Utils"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -36.0
+offset_top = -32.0
+offset_right = -4.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_font_sizes/font_size = 12
+text = "00:00"
+horizontal_alignment = 2
+vertical_alignment = 1

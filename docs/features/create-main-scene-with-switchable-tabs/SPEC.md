@@ -82,7 +82,7 @@ Main (Node2D)                       → main.gd
 ```
 Taskbar (Control)                   → taskbar.gd
                                     anchors: bottom-wide (left 0, right 0, bottom 0),
-                                    offset_top = -H (H = taskbar-base.png native height),
+                                    offset_top = -32 (static; see the §6 amendment),
                                     mouse_filter = IGNORE
 ├── Base (TextureRect)              texture = taskbar-base.png, full-rect of Taskbar,
 │                                   stretch_mode = STRETCH_SCALE, mouse_filter = IGNORE
@@ -104,7 +104,7 @@ Each button is exactly 32×32 with `stretch_mode = STRETCH_SCALE`, `ignore_textu
 | AppChrome | `chrome` | 64 | (64,328)–(96,360) | (80,344) |
 | AppCs2 | `cs2` | 96 | (96,328)–(128,360) | (112,344) |
 
-If the taskbar art is shorter than 32 px, the icons overhang its top edge — that is accepted; do not move them.
+The taskbar rect is a static 32 px tall and `Base` scales `taskbar-base.png` to fill it, so the icons always sit flush inside the bar.
 
 ### Colours
 
@@ -160,11 +160,29 @@ func _on_app_selected(app_id: String) -> void   # sets Background.color, increme
 - Changing the viewport from the Godot default (1152×648, stretch `disabled`) to 640×360 `canvas_items`/`keep`/`integer` is intentional and now the project-wide art-style baseline: 640×360 pixel-art canvas, nearest-neighbour, integer upscale.
 - At the runner's 640×360 window the integer scale is exactly 1× with no letterboxing, so base pixel `(x, y)` maps to window pixel `(x, y)`.
 - Import both PNGs with `filter=false` / nearest and mipmaps off so the upscale stays crisp; if the editor default re-enables filtering, set it per-texture in the `.import` file.
-- Derive the icon atlas regions from the sheet's measured dimensions (`texture.get_width() / 2`, `texture.get_height() / 4`) instead of hard-coding pixel offsets, so a differently sized sheet still slices into 4 rows × 2 columns.
+- Derive the icon atlas regions from the sheet's measured dimensions (`texture.get_width() / 2`, `texture.get_height() / 4`) instead of hard-coding pixel offsets, so a differently sized sheet still slices into 4 rows × 2 columns. This still governs the selection/hover atlases `taskbar.gd` builds at runtime; the resting textures baked into `taskbar.tscn` do hard-code their regions (see the §6 amendment).
 - Use `TextureButton` so clicks come through the normal GUI path; keep `Taskbar`, `Base` and `Background` at `MOUSE_FILTER_IGNORE` so only the four buttons consume input.
 - Wire selection through the `app_selected` signal — `main.gd` must not reach into the buttons directly.
-- Store the taskbar height as `H = base_texture.get_height()` at `_ready()` and set `offset_top = -H`; do not hard-code a number.
+- Set the taskbar height statically in `taskbar.tscn` as `offset_top = -32.0` — see the amendment below; this line originally required deriving it from `base_texture.get_height()` at `_ready()`.
 - No new addons, no third-party dependencies, no shaders.
+
+### Amendment — 2026-09-09: the taskbar layout is static
+
+The taskbar's geometry was originally computed in `taskbar.gd`'s `_ready()`. Godot does not run
+non-`@tool` scripts in the editor, so the scene as saved was a 640×0 rect and the taskbar was
+invisible in the editor preview. Layout now lives in `taskbar.tscn`:
+
+- `Taskbar` carries `offset_top = -32.0`; `Base` carries `stretch_mode = STRETCH_SCALE`; each app
+  button carries its own offsets, `custom_minimum_size` and a resting `AtlasTexture` sub-resource.
+- The `_ready()` prologue that set `offset_top`, the `Base` texture and the mouse filters is gone,
+  as is `_configure_button()`. `ICON_DRAW_SIZE` and `BASE_TEXTURE_PATH` went with them.
+- `taskbar.gd` still owns the selection/hover swap and still measures the sheet to build those
+  atlases; only the resting state is baked.
+
+Hard-coding 32 does not affect upscaling. Under `canvas_items`/`keep`/`integer` the layout space is
+permanently 640×360, so 32 is 32 *base units* and renders as 32 × N physical pixels at every window
+size (32/64/96/384 px at 1×/2×/3×/12×). The accepted tradeoff: a `taskbar-base.png` of a different
+native height is now scaled to fill the 32 px bar rather than resizing it.
 
 ## 7. Verification hooks
 

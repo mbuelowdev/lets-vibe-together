@@ -1,0 +1,53 @@
+[
+  {
+    "name": "A first run has no settings file and every dropdown falls back to ambient state",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().languageSelectVisible", "equals": true },
+      { "expect": "window.__egon.state().settingsFileExists", "equals": false },
+      { "expect": "window.__egon.state().savedLocale", "equals": "" },
+      { "expect": "window.__egon.state().savedResolutionScale", "equals": 0 },
+      { "expect": "window.__egon.state().savedWindowMode", "equals": "" },
+      { "screenshot": "settings-first-run" }
+    ]
+  },
+  {
+    "name": "A settings file on disk drives the dropdowns at game start, not the OS locale or the window size",
+    "scenario": "saved_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().savedLocale", "equals": "de" },
+      { "expect": "window.__egon.state().locale", "equals": "de" },
+      { "expect": "window.__egon.state().selectedLanguage", "equals": "Deutsch" },
+      { "expect": "window.__egon.state().savedResolutionScale", "equals": 2 },
+      { "expect": "window.__egon.state().selectedResolution", "equals": "1280x720" },
+      { "expect": "window.__egon.state().savedWindowMode", "equals": "WINDOW_MODE_WINDOWED" },
+      { "expect": "window.__egon.state().selectedWindowMode", "equals": "Fenstermodus" },
+      { "screenshot": "settings-loaded-from-file" }
+    ]
+  },
+  {
+    "name": "Picking a language writes it immediately, without waiting for Save & Quit",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().languageSelectVisible", "equals": true },
+      { "expect": "window.__egon.state().settingsFileExists", "equals": false },
+      { "press": "Space" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "LanguageSelect" },
+      { "press": "Space" },
+      { "press": "Down" },
+      { "press": "Enter" },
+      { "expect": "window.__egon.state().selectedLanguage", "equals": "简体中文" },
+      { "expect": "window.__egon.state().locale", "equals": "zh_Hans" },
+      { "expect": "window.__egon.state().savedLocale", "equals": "zh_Hans" },
+      { "expect": "window.__egon.state().settingsFileExists", "equals": true },
+      { "screenshot": "settings-write-on-change" },
+      { "press": "Space" },
+      { "press": "Up" },
+      { "press": "Enter" },
+      { "expect": "window.__egon.state().savedLocale", "equals": "en" }
+    ]
+  }
+]

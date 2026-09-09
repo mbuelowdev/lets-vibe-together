@@ -1,0 +1,51 @@
+[
+  {
+    "name": "A first run has no save file and nothing has been written yet",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().saveFileExists", "equals": false },
+      { "expect": "window.__egon.state().savedRubles", "equals": -1 },
+      { "expect": "window.__egon.state().savePending", "equals": false },
+      { "expect": "window.__egon.state().moneyMatchesState", "equals": true },
+      { "screenshot": "progress-first-run" }
+    ]
+  },
+  {
+    "name": "The balance is read from the save file at game start, not defaulted",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().rubles", "equals": 4242 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "expect": "window.__egon.state().moneyText", "equals": "4  242  ₽" },
+      { "expect": "window.__egon.state().moneyMatchesState", "equals": true },
+      { "expect": "window.__egon.state().savePending", "equals": false },
+      { "screenshot": "progress-loaded-from-file" }
+    ]
+  },
+  {
+    "name": "A balance change reaches the file on its own, without Save & Quit",
+    "scenario": "earned",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().savedRubles", "equals": 7777 },
+      { "expect": "window.__egon.state().rubles", "equals": 7777 },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
+      { "expect": "window.__egon.state().savePending", "equals": false },
+      { "expect": "window.__egon.state().moneyMatchesState", "equals": true },
+      { "screenshot": "progress-autosaved" }
+    ]
+  },
+  {
+    "name": "A scenario that fabricates a balance never writes it, so no check inherits it",
+    "scenario": "rich",
+    "steps": [
+      { "await": "window.__egon.state().rubles", "equals": 1234567 },
+      { "expect": "window.__egon.state().autosaveEnabled", "equals": false },
+      { "expect": "window.__egon.state().savePending", "equals": false },
+      { "expect": "window.__egon.state().savedRubles", "equals": -1 }
+    ]
+  }
+]

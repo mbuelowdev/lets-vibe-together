@@ -1,0 +1,43 @@
+[
+  {
+    "name": "The taskbar's right end holds a divider, a volume icon and a clock, in that order",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().taskbarUtilsVisible", "at_least": 3 },
+      { "expect": "window.__egon.state().taskbarUtilsOrder.join(',')", "contains": "divider,volume,clock" },
+      { "expect": "window.__egon.state().taskbarUtilsRightMargin", "equals": 4 },
+      { "expect": "window.__egon.state().volumeIconColumn", "equals": 2 },
+      { "screenshot": "taskbar-utils-cluster" }
+    ]
+  },
+  {
+    "name": "The clock reads the local system time as zero-padded 24-hour HH:MM",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().clockMatchesSystemTime", "equals": true },
+      { "expect": "window.__egon.state().clockText.length", "equals": 5 },
+      { "expect": "window.__egon.state().clockText", "contains": ":" },
+      { "screenshot": "taskbar-clock" }
+    ]
+  },
+  {
+    "name": "The volume icon is decoration: pointing at it and clicking it change nothing",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().taskbarUtilsClickable", "equals": false },
+      { "move": [588, 344] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "" },
+      { "expect": "window.__egon.state().hoveredIconColumn", "equals": -1 },
+      { "click": [588, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().appSwitchCount", "equals": 0 },
+      { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },
+      { "screenshot": "taskbar-volume-inert" }
+    ]
+  }
+]

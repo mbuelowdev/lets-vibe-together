@@ -1,0 +1,59 @@
+[
+  {
+    "name": "The taskbar shows the ruble balance immediately left of the divider",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().taskbarUtilsVisible", "equals": 5 },
+      { "expect": "window.__egon.state().taskbarUtilsOrder.join(',')", "equals": "money,moneysign,divider,volume,clock" },
+      { "expect": "window.__egon.state().taskbarUtilsRightMargin", "equals": 4 },
+      { "expect": "window.__egon.state().rubles", "equals": 1337 },
+      { "expect": "window.__egon.state().moneyText", "equals": "1  337  ₽" },
+      { "expect": "window.__egon.state().moneySignDrop", "equals": 2 },
+      { "screenshot": "taskbar-money" }
+    ]
+  },
+  {
+    "name": "The balance drawn is read from GameState, not the string baked into taskbar.tscn",
+    "scenario": "rich",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().rubles", "equals": 1234567 },
+      { "expect": "window.__egon.state().moneyText", "equals": "1  234  567  ₽" },
+      { "expect": "window.__egon.state().moneyMatchesState", "equals": true },
+      { "screenshot": "taskbar-money-rich" }
+    ]
+  },
+  {
+    "name": "The balance survives app switching, because it lives in the autoload and not in a screen",
+    "scenario": "rich",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "click": [112, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
+      { "expect": "window.__egon.state().rubles", "equals": 1234567 },
+      { "expect": "window.__egon.state().moneyMatchesState", "equals": true },
+      { "screenshot": "taskbar-money-across-apps" }
+    ]
+  },
+  {
+    "name": "The balance is decoration: pointing at it and clicking it change nothing",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().taskbarUtilsClickable", "equals": false },
+      { "move": [545, 344] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "" },
+      { "expect": "window.__egon.state().hoveredIconColumn", "equals": -1 },
+      { "click": [545, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().appSwitchCount", "equals": 0 },
+      { "expect": "window.__egon.state().rubles", "equals": 1337 },
+      { "screenshot": "taskbar-money-inert" }
+    ]
+  }
+]

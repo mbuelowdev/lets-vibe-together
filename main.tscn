@@ -1,14 +1,25 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://b8rf7eplahq3y"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://bengjj27rnu2g" path="res://main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://taskbar.tscn" id="2_taskbar"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="3_h2yge"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=1797970087]
 script = ExtResource("1_main")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=1298282622]
 
-[node name="Background" type="ColorRect" parent="UI"]
+[node name="Root" type="Control" parent="UI" unique_id=1298282623]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Background" type="ColorRect" parent="UI/Root" unique_id=1481592157]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,8 +28,10 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.18039216, 0.25882354, 0.44705883, 1)
 
-[node name="Screen" type="TextureRect" parent="UI"]
+[node name="Screen" type="TextureRect" parent="UI/Root" unique_id=1855182333]
 visible = false
+texture_filter = 1
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -27,6 +40,179 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 2
-texture_filter = 1
 
-[node name="Taskbar" parent="UI" instance=ExtResource("2_taskbar")]
+[node name="Taskbar" parent="UI/Root" unique_id=696222013 instance=ExtResource("2_taskbar")]
+layout_mode = 1
+
+[node name="LanguageSelect" type="OptionButton" parent="UI/Root" unique_id=1695843778]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -84.0
+offset_right = 88.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_h2yge")
+theme_override_font_sizes/font_size = 12
+alignment = 1
+
+[node name="ResolutionSelect" type="OptionButton" parent="UI/Root" unique_id=1695843776]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -56.0
+offset_right = 88.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_h2yge")
+theme_override_font_sizes/font_size = 12
+alignment = 1
+
+[node name="WindowModeSelect" type="OptionButton" parent="UI/Root" unique_id=1695843777]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -28.0
+offset_right = 88.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_h2yge")
+theme_override_font_sizes/font_size = 12
+alignment = 1
+
+[node name="DeleteSaveButton" type="Button" parent="UI/Root" unique_id=1695843780]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_right = 88.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_h2yge")
+theme_type_variation = &"DangerousButton"
+theme_override_font_sizes/font_size = 12
+text = "Delete local save"
+
+[node name="SaveQuitButton" type="Button" parent="UI/Root" unique_id=1695843779]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = 28.0
+offset_right = 88.0
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_h2yge")
+theme_override_font_sizes/font_size = 12
+text = "Save & Quit"
+
+[node name="ConfirmDelete" type="Control" parent="UI/Root" unique_id=1695843781]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_h2yge")
+
+[node name="Shade" type="ColorRect" parent="UI/Root/ConfirmDelete" unique_id=1695843782]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5490196)
+
+[node name="Panel" type="ColorRect" parent="UI/Root/ConfirmDelete" unique_id=1695843783]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = -58.0
+offset_right = 152.0
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.65882355, 0.72156864, 0.84705883, 1)
+
+[node name="Fill" type="ColorRect" parent="UI/Root/ConfirmDelete/Panel" unique_id=1695843784]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.105882354, 0.15686275, 0.21960784, 1)
+
+[node name="Message" type="Label" parent="UI/Root/ConfirmDelete/Panel" unique_id=1695843785]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 12
+text = "Are you sure you want to delete your save? All progress will be lost!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ConfirmYesButton" type="Button" parent="UI/Root/ConfirmDelete/Panel" unique_id=1695843786]
+layout_mode = 1
+offset_left = 12.0
+offset_top = 82.0
+offset_right = 148.0
+offset_bottom = 106.0
+theme = ExtResource("3_h2yge")
+theme_type_variation = &"DangerousButton"
+theme_override_font_sizes/font_size = 12
+text = "Yes, delete it!"
+
+[node name="ConfirmCancelButton" type="Button" parent="UI/Root/ConfirmDelete/Panel" unique_id=1695843787]
+layout_mode = 1
+offset_left = 156.0
+offset_top = 82.0
+offset_right = 292.0
+offset_bottom = 106.0
+theme = ExtResource("3_h2yge")
+theme_override_font_sizes/font_size = 12
+text = "Cancel"
