@@ -2,13 +2,13 @@
 
 ## 1. Context & Goal
 
-`res://main.tscn` in this branch is still an empty `Node` — the game has no screen at all. This feature establishes the game's visual foundation: a 320×180 pixel-art base resolution that is upscaled with nearest-neighbour integer scaling, a bottom-attached taskbar built from the uploaded taskbar art, and four clickable app icons that act as tabs. Exactly one app is selected at a time and each app paints a different (placeholder) full-screen background, so later features can hang real app content off a selection that already works.
+`res://main.tscn` in this branch is still an empty `Node` — the game has no screen at all. This feature establishes the game's visual foundation: a 640×360 pixel-art base resolution that is upscaled with nearest-neighbour integer scaling, a bottom-attached taskbar built from the uploaded taskbar art, and four clickable app icons that act as tabs. Exactly one app is selected at a time and each app paints a different (placeholder) full-screen background, so later features can hang real app content off a selection that already works.
 
 ## 2. Scope
 
 ### In scope
 
-- Project display settings: base viewport 320×180, `canvas_items` stretch, `keep` aspect, integer scale mode, nearest-neighbour default texture filter.
+- Project display settings: base viewport 640×360, `canvas_items` stretch, `keep` aspect, integer scale mode, nearest-neighbour default texture filter.
 - `main.tscn` rebuilt as the app shell: full-canvas background `ColorRect` + taskbar UI layer.
 - A `taskbar.tscn` / `taskbar.gd` component: `taskbar-base.png` spanning the bottom of the canvas, plus four 32×32 app buttons (home, steam, chrome, cs2) left-aligned, no gaps.
 - Click-to-select: clicking an app icon swaps that icon to its selected variant, deselects the previously selected one, and changes the background colour.
@@ -27,7 +27,7 @@
 
 ### Files to modify
 
-- `project.godot` — add the `[display]` section (window size 320×180, stretch mode `canvas_items`, aspect `keep`, scale mode `integer`) and `rendering/textures/canvas_textures/default_texture_filter=0` (nearest). Leave the existing `EgonBridge` autoload entry and `run/main_scene` untouched.
+- `project.godot` — add the `[display]` section (window size 640×360, stretch mode `canvas_items`, aspect `keep`, scale mode `integer`) and `rendering/textures/canvas_textures/default_texture_filter=0` (nearest). Leave the existing `EgonBridge` autoload entry and `run/main_scene` untouched.
 - `main.tscn` — currently `[node name="Main" type="Node"]` with no children. Rebuild as described in §5, keeping the root node named `Main`.
 
 ### Files to create
@@ -45,7 +45,7 @@
 
 ## 4. Assets
 
-- `taskbar-base.png` — the taskbar background strip. Placed as a `TextureRect` anchored to the bottom of the 320×180 canvas, drawn at its **native height** `H` (do not scale vertically) and stretched horizontally to the full 320 px width (`stretch_mode = STRETCH_SCALE`, `texture_filter = TEXTURE_FILTER_NEAREST`). Its top edge sits at `y = 180 - H`.
+- `taskbar-base.png` — the taskbar background strip. Placed as a `TextureRect` anchored to the bottom of the 640×360 canvas, drawn at its **native height** `H` (do not scale vertically) and stretched horizontally to the full 640 px width (`stretch_mode = STRETCH_SCALE`, `texture_filter = TEXTURE_FILTER_NEAREST`). Its top edge sits at `y = 360 - H`.
 - `taskbar-app-icons.png` — the app icon sheet. Treat it as a grid of **4 rows × 2 columns**: rows top-to-bottom are `home`, `steam`, `chrome`, `cs2`; column 0 is the unselected variant, column 1 is the selected variant. Slice it with `AtlasTexture` regions derived from the measured cell size, and draw every icon at exactly **32×32** base pixels (scale the region only if the measured cell is not 32×32), nearest filtering, no mipmaps.
 
 ## 5. Interface / Contract
@@ -54,8 +54,8 @@
 
 ```
 [display]
-window/size/viewport_width=320
-window/size/viewport_height=180
+window/size/viewport_width=640
+window/size/viewport_height=360
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
 window/stretch/scale_mode="integer"
@@ -64,7 +64,7 @@ window/stretch/scale_mode="integer"
 textures/canvas_textures/default_texture_filter=0
 ```
 
-All coordinates below are in the 320×180 base space, origin top-left.
+All coordinates below are in the 640×360 base space, origin top-left.
 
 ### Scene tree
 
@@ -73,7 +73,7 @@ All coordinates below are in the 320×180 base space, origin top-left.
 ```
 Main (Node2D)                       → main.gd
 └── UI (CanvasLayer)
-    ├── Background (ColorRect)      anchors full rect (0,0)-(320,180), mouse_filter = IGNORE
+    ├── Background (ColorRect)      anchors full rect (0,0)-(640,360), mouse_filter = IGNORE
     └── Taskbar (instance of taskbar.tscn)
 ```
 
@@ -95,14 +95,14 @@ Taskbar (Control)                   → taskbar.gd
 
 ### App button layout (base pixels)
 
-Each button is exactly 32×32 with `stretch_mode = STRETCH_SCALE`, `ignore_texture_size = true`, `texture_filter = TEXTURE_FILTER_NEAREST`, and **bottom edge at `y = 180`** (top edge `y = 148`), regardless of the taskbar art's native height. No gaps between cells:
+Each button is exactly 32×32 with `stretch_mode = STRETCH_SCALE`, `ignore_texture_size = true`, `texture_filter = TEXTURE_FILTER_NEAREST`, and **bottom edge at `y = 360`** (top edge `y = 328`), regardless of the taskbar art's native height. No gaps between cells:
 
 | Button | app_id | left x | rect (base px) | centre (base px) |
 | --- | --- | --- | --- | --- |
-| AppHome | `home` | 0 | (0,148)–(32,180) | (16,164) |
-| AppSteam | `steam` | 32 | (32,148)–(64,180) | (48,164) |
-| AppChrome | `chrome` | 64 | (64,148)–(96,180) | (80,164) |
-| AppCs2 | `cs2` | 96 | (96,148)–(128,180) | (112,164) |
+| AppHome | `home` | 0 | (0,328)–(32,360) | (16,344) |
+| AppSteam | `steam` | 32 | (32,328)–(64,360) | (48,344) |
+| AppChrome | `chrome` | 64 | (64,328)–(96,360) | (80,344) |
+| AppCs2 | `cs2` | 96 | (96,328)–(128,360) | (112,344) |
 
 If the taskbar art is shorter than 32 px, the icons overhang its top edge — that is accepted; do not move them.
 
@@ -157,8 +157,8 @@ func _on_app_selected(app_id: String) -> void   # sets Background.color, increme
 ## 6. Implementation notes / constraints
 
 - The game map describes a merged tree with `world.tscn`/`player.tscn` and `main.gd` bridge fields (`playerX`, `moveCount`, …). None of those files exist in this branch; `main.tscn` is a bare `Node`. Write `main.gd` fresh and do not register or reference those fields.
-- Changing the viewport from the Godot default (1152×648, stretch `disabled`) to 320×180 `canvas_items`/`keep`/`integer` is intentional and now the project-wide art-style baseline: 320×180 pixel-art canvas, nearest-neighbour, integer upscale.
-- At the runner's 640×360 window the integer scale is exactly 2× with no letterboxing, so base pixel `(x, y)` maps to window pixel `(2x, 2y)`.
+- Changing the viewport from the Godot default (1152×648, stretch `disabled`) to 640×360 `canvas_items`/`keep`/`integer` is intentional and now the project-wide art-style baseline: 640×360 pixel-art canvas, nearest-neighbour, integer upscale.
+- At the runner's 640×360 window the integer scale is exactly 1× with no letterboxing, so base pixel `(x, y)` maps to window pixel `(x, y)`.
 - Import both PNGs with `filter=false` / nearest and mipmaps off so the upscale stays crisp; if the editor default re-enables filtering, set it per-texture in the `.import` file.
 - Derive the icon atlas regions from the sheet's measured dimensions (`texture.get_width() / 2`, `texture.get_height() / 4`) instead of hard-coding pixel offsets, so a differently sized sheet still slices into 4 rows × 2 columns.
 - Use `TextureButton` so clicks come through the normal GUI path; keep `Taskbar`, `Base` and `Background` at `MOUSE_FILTER_IGNORE` so only the four buttons consume input.
@@ -187,7 +187,7 @@ func _on_app_selected(app_id: String) -> void   # sets Background.color, increme
 
 ## 9. Acceptance criteria
 
-1. The game boots into a 320×180 pixel-art screen that upscales with crisp nearest-neighbour pixels, showing a bottom-attached taskbar drawn from the taskbar base art with four app icons in a row at its left edge.
+1. The game boots into a 640×360 pixel-art screen that upscales with crisp nearest-neighbour pixels, showing a bottom-attached taskbar drawn from the taskbar base art with four app icons in a row at its left edge.
 2. Clicking an app icon selects it: that icon switches to its selected variant, every other icon returns to its unselected variant, and never more than one app is selected.
 3. Each of the four apps shows its own distinct full-screen background colour, and the background changes as soon as a different app is selected.
 

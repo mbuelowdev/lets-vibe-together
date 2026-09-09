@@ -4,7 +4,7 @@ Settled global choices. Do not re-ask Discord unless this feature must change on
 
 ## Art style
 
-2. 320×180 (16:9) instead
+2. 640×360 (16:9) instead
 
 ## Palette
 

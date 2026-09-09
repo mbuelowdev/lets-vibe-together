@@ -17,7 +17,7 @@
     "proof": "screenshot",
     "steps": [
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
-      { "click": [160, 328] },
+      { "click": [80, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "chrome" },
       { "expect": "window.__egon.state().backgroundColor", "equals": "#3f6b3a" },
       { "expect": "window.__egon.state().appSwitchCount", "at_least": 1 },
@@ -30,9 +30,9 @@
     "proof": "screenshot",
     "steps": [
       { "await": "window.__egon.state().appIconCount", "equals": 4 },
-      { "click": [96, 328] },
+      { "click": [48, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "steam" },
-      { "click": [224, 328] },
+      { "click": [112, 344] },
       { "expect": "window.__egon.state().selectedAppIndex", "equals": 3 },
       { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },
       { "expect": "window.__egon.state().backgroundColor", "equals": "#6e3a3a" },
