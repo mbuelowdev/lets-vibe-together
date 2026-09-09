@@ -19,6 +19,9 @@ extends Node
 ## near frequent enough for the write to need debouncing.
 ##
 ## This is preferences only. Progress (GameState's rubles) is not persisted.
+##
+## Also binds the UI font fallback chain in `_init()` so it is in place before any Control
+## shapes text. That has to live here because this autoload is the first node that runs.
 
 ## Emitted when the whole stored set is replaced from disk - load_settings() or clear() -
 ## so listeners can re-read every value at once. Deliberately not emitted from the setters:
@@ -40,8 +43,34 @@ var _resolution_scale := 0
 var _window_mode_key := ""
 
 
+func _init() -> void:
+	_bind_ui_font_fallbacks()
+
+
 func _ready() -> void:
 	load_settings()
+
+
+## Web has no system fonts. Pixelify Sans only covers Latin/Cyrillic/Greek, so CJK and the
+## ruble sign have to come from the faces listed on ui-font.tres. Those fallbacks are copied
+## onto the base FontFile as well: HTML5's text server walks FontFile.fallbacks, and the
+## typed Font array on FontVariation has been seen empty after a packed web load.
+func _bind_ui_font_fallbacks() -> void:
+	var variation := load("res://resources/ui-font.tres") as FontVariation
+	if variation == null:
+		return
+	var chain: Array[Font] = [
+		load("res://assets/fonts/fusion-pixel-12px-proportional-zh_hans.ttf") as Font,
+		load("res://assets/fonts/fusion-pixel-12px-proportional-ja.ttf") as Font,
+		load("res://assets/fonts/Galmuri11.ttf") as Font,
+	]
+	for font in chain:
+		if font == null:
+			push_warning("Settings: UI font fallback failed to load")
+			return
+	variation.fallbacks = chain
+	if variation.base_font != null:
+		variation.base_font.fallbacks = chain
 
 
 func _notification(what: int) -> void:

@@ -29,6 +29,7 @@ window/stretch/scale_mode="integer"
 
 [gui]
 
+theme/custom="res://resources/theme.tres"
 theme/custom_font="res://resources/ui-font.tres"
 
 [input]

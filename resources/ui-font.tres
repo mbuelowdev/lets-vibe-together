@@ -1,0 +1,33 @@
+[gd_resource type="FontVariation" load_steps=5 format=3 uid="uid://bki2j4bomq2jo"]
+
+; Fallback order matters: the first font in the chain that has a glyph draws it, so
+; Pixelify Sans (Latin, Cyrillic, Greek) leads and the CJK fonts only pick up what it
+; cannot cover. The fusion-pixel faces share one codepoint set and differ only in regional
+; glyph shapes, so zh_hans is asked first and the ja face is reached through the "ja"
+; language override baked into the zh_hans import. Galmuri11 is last: it draws Korean via
+; the "ko" overrides on both fusion faces, and Vietnamese because it is the only font here
+; with the precomposed vowels. Web has no system-font fallback, so this chain (re-applied
+; to base_font at boot in settings.gd) is the only way CJK and U+20BD draw in HTML5.
+;
+; variation_transform exists to keep Pixelify Sans on whole pixels. The two grids in this
+; chain disagree: the fusion faces and Galmuri11 are 1200 upem with a 100-unit pixel, so
+; they are exact at font size 12, while Pixelify Sans is 1000 upem with a 90-unit pixel and
+; is only exact at 1000/90 = 11.1px. Rasterised at 12 its design pixel covers 1.08 device
+; pixels, so the row whose centre falls twice inside one design row gets drawn twice - the
+; cap row on digits and capitals, and the accent row on diacritics, which is why "1920x1080"
+; grew a stray line along the top of every digit. Scaling the outline by 11/12 puts the
+; design pixel at 0.99 device pixels, which rasterises identically to font size 11 - one
+; device pixel per design pixel, nothing doubled. The transform applies only to base_font,
+; so the fallbacks keep their native 12px grid, and it leaves advances alone, so no text
+; changes width. Keep UI font sizes at 12 (or 24): the ratio is tuned to those.
+
+[ext_resource type="FontFile" uid="uid://cqn7j6qus4hip" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="1_pixelify"]
+[ext_resource type="FontFile" uid="uid://blmup84228vg4" path="res://assets/fonts/fusion-pixel-12px-proportional-zh_hans.ttf" id="2_fusion_zh"]
+[ext_resource type="FontFile" uid="uid://d2j6g4c0cgel1" path="res://assets/fonts/fusion-pixel-12px-proportional-ja.ttf" id="3_fusion_ja"]
+[ext_resource type="FontFile" uid="uid://c5dj544ml5h7w" path="res://assets/fonts/Galmuri11.ttf" id="4_galmuri"]
+
+[resource]
+resource_name = "UI Font"
+fallbacks = Array[Font]([ExtResource("2_fusion_zh"), ExtResource("3_fusion_ja"), ExtResource("4_galmuri")])
+base_font = ExtResource("1_pixelify")
+variation_transform = Transform2D(0.916667, 0, 0, 0.916667, 0, 0)

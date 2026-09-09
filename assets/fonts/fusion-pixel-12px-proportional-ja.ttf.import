@@ -29,7 +29,7 @@ oversampling=1.0
 Fallbacks=null
 fallbacks=[]
 Compress=null
-compress=true
+compress=false
 preload=[]
 language_support={
 "ko": false

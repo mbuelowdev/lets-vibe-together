@@ -1,0 +1,112 @@
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://dm3nk3u7xv065"]
+
+[ext_resource type="Texture2D" uid="uid://dqlgx5hx5l08g" path="res://assets/images/ui-button.png" id="1_d4nwg"]
+[ext_resource type="FontVariation" uid="uid://bki2j4bomq2jo" path="res://resources/ui-font.tres" id="2_uifont"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iojti"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(65, 1, 14, 14)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_focus"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vidcg"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(33, 1, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1bvpa"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 3.0
+texture_margin_right = 2.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(49, 1, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_60yue"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(1, 1, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iehnn"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 3.0
+texture_margin_right = 2.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(17, 1, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_disabled"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(65, 17, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_hover"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(33, 17, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_hover_pressed"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 3.0
+texture_margin_right = 2.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(49, 17, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_normal"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(1, 17, 14, 14)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_pressed"]
+texture = ExtResource("1_d4nwg")
+texture_margin_left = 2.0
+texture_margin_top = 3.0
+texture_margin_right = 2.0
+texture_margin_bottom = 3.0
+region_rect = Rect2(17, 17, 14, 14)
+
+[resource]
+default_font = ExtResource("2_uifont")
+default_font_size = 12
+Button/styles/disabled = SubResource("StyleBoxTexture_iojti")
+Button/styles/focus = SubResource("StyleBoxFlat_focus")
+Button/styles/hover = SubResource("StyleBoxTexture_vidcg")
+Button/styles/hover_pressed = SubResource("StyleBoxTexture_1bvpa")
+Button/styles/normal = SubResource("StyleBoxTexture_60yue")
+Button/styles/pressed = SubResource("StyleBoxTexture_iehnn")
+DangerousButton/base_type = &"Button"
+DangerousButton/styles/disabled = SubResource("StyleBoxTexture_danger_disabled")
+DangerousButton/styles/hover = SubResource("StyleBoxTexture_danger_hover")
+DangerousButton/styles/hover_pressed = SubResource("StyleBoxTexture_danger_hover_pressed")
+DangerousButton/styles/normal = SubResource("StyleBoxTexture_danger_normal")
+DangerousButton/styles/pressed = SubResource("StyleBoxTexture_danger_pressed")

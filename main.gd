@@ -324,6 +324,7 @@ func _saved_window_mode_key() -> String:
 ## scaled past 640x360: every glyph picks up grey fringes and the list looks washed out.
 func _style_popup(select: OptionButton) -> PopupMenu:
 	var popup := select.get_popup()
+	popup.theme = select.theme
 	popup.add_theme_font_size_override("font_size", 12)
 	popup.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 	return popup
