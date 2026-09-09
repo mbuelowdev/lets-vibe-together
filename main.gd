@@ -35,6 +35,9 @@ func _register_bridge_fields() -> void:
 	bridge.register_field("appIconCount", func() -> int: return _taskbar.APP_IDS.size())
 	bridge.register_field("selectedIconCount", func() -> int: return _taskbar.selected_icon_count())
 	bridge.register_field("taskbarVisible", func() -> bool: return _is_taskbar_visible())
+	bridge.register_field("hoveredApp", func() -> String: return _taskbar.hovered_app_id())
+	bridge.register_field("hoverEnterCount", func() -> int: return _taskbar.hover_enter_count())
+	bridge.register_field("hoveredIconColumn", func() -> int: return _taskbar.hovered_icon_column())
 
 
 func _is_taskbar_visible() -> bool:
