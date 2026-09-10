@@ -231,7 +231,10 @@ func _on_quit_pressed() -> void:
 
 
 func _register_bridge_fields() -> void:
-	var bridge := get_node("/root/EgonBridge")
+	# The egon bot's bridge: there in repo runs and its debug exports, dropped from release builds.
+	var bridge := get_node_or_null("/root/EgonBridge")
+	if bridge == null:
+		return
 	bridge.register_field("screen", func() -> String: return SCREEN_ID)
 	bridge.register_field("mainMenuVisible", func() -> bool: return is_visible_in_tree())
 	bridge.register_field("mainMenuTitleVisible", func() -> bool: return _is_title_visible())

@@ -162,6 +162,9 @@ func _ready() -> void:
 	# nothing to show without it.
 	_settings = get_node("/root/Settings")
 	_state = get_node_or_null("/root/GameState")
+	# Where the window cannot be resized - the web build - the dropdown stays in the column but
+	# disabled: hiding it would pull the rest of the column up and take a stop out of the ring.
+	_resolution_select.disabled = not _settings.can_resize_window()
 	_master_volume_slider.value_changed.connect(_on_master_volume_changed)
 	_language_select.item_selected.connect(_on_language_selected)
 	_resolution_select.item_selected.connect(_on_resolution_selected)
@@ -514,7 +517,10 @@ func _on_back_pressed() -> void:
 ## saveFileExists and rubles mean what the desktop's do, so a check can prove a deletion without
 ## leaving this screen.
 func _register_bridge_fields() -> void:
-	var bridge := get_node("/root/EgonBridge")
+	# The egon bot's bridge: there in repo runs and its debug exports, dropped from release builds.
+	var bridge := get_node_or_null("/root/EgonBridge")
+	if bridge == null:
+		return
 	bridge.register_field("screen", func() -> String: return SCREEN_ID)
 	bridge.register_field("settingsVisible", func() -> bool: return is_visible_in_tree())
 	bridge.register_field("settingsBackground", func() -> String: return _background_path())

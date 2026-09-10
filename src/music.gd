@@ -24,6 +24,11 @@ extends Node
 ## cutting to it. The filter is bypassed whenever the sweep is all the way open. How far down it
 ## goes is the cutoff the bus layout gives the filter, not a number here - retune the muffle
 ## without touching the screens. Any other effect is enabled and bypassed, as before.
+##
+## Bus effects only run in the engine's own mixer. On the web build Godot defaults every player to
+## sample playback, which hands the stream to the browser and skips them - the track played but
+## Settings never muffled it - so project.godot sets audio/general/default_playback_type.web back
+## to Stream.
 
 const MENU_STREAM := preload("res://assets/audio/main-menu-music.mp3")
 const BUS_NAME := "Music"

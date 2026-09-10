@@ -24,6 +24,12 @@ RUN curl -fsSL -o /tmp/godot.zip \
 WORKDIR /src
 COPY . .
 
+# EgonBridge is the egon bot's debug bridge, for its own debug exports. .dockerignore keeps its
+# scripts out of the build context; dropping the autoload too means a release boot never tries to
+# load it. The grep fails the build if a reference survives, e.g. under a renamed autoload.
+RUN sed -i '/^EgonBridge=/d' project.godot \
+    && ! grep -q 'res://\.egon/' project.godot
+
 RUN mkdir -p /out \
     && godot --headless --path /src --import \
     && godot --headless --path /src --export-release Web /out/index.html \

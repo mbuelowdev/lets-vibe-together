@@ -197,7 +197,10 @@ func _on_save_quit_pressed() -> void:
 
 
 func _register_bridge_fields() -> void:
-	var bridge := get_node("/root/EgonBridge")
+	# The egon bot's bridge: there in repo runs and its debug exports, dropped from release builds.
+	var bridge := get_node_or_null("/root/EgonBridge")
+	if bridge == null:
+		return
 	bridge.register_field("screen", func() -> String: return SCREEN_ID)
 	bridge.register_field("selectedApp", func() -> String: return _taskbar.selected_app_id())
 	bridge.register_field("selectedAppIndex", func() -> int: return _taskbar.selected_index())

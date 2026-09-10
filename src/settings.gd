@@ -184,10 +184,9 @@ func load_settings() -> void:
 ## Mode before size: _apply_resolution_scale() refuses to touch a window that is not
 ## windowed, so a saved 1280x720 only lands once the mode has been put back.
 ##
-## On the web build the window half is close to a no-op: the canvas already tracks the
-## browser window (html/canvas_resize_policy=2), and a browser will not grant fullscreen
-## without a user gesture, so a saved fullscreen boots windowed until the player picks it
-## again.
+## On the web build the resolution is never applied - see _apply_resolution_scale() - and a
+## browser will not grant fullscreen without a user gesture, so a saved fullscreen boots
+## windowed until the player picks it again.
 func _apply_saved() -> void:
 	if _is_offered_locale(_locale):
 		TranslationServer.set_locale(_locale)
@@ -275,6 +274,13 @@ func set_resolution_scale(value: int) -> void:
 	save_settings()
 
 
+## False on the web build, where the page owns the canvas size and a picked resolution never
+## lands - see _apply_resolution_scale(). The settings screen reads it to disable the dropdown
+## there rather than offer sizes that do nothing.
+func can_resize_window() -> bool:
+	return not OS.has_feature("web")
+
+
 func window_mode_key() -> String:
 	return _window_mode_key
 
@@ -325,8 +331,14 @@ func _apply_master_volume(percent: int) -> void:
 ## A fullscreen window owns its own size, so a scale picked there is only recorded; it takes
 ## effect when the mode goes back to Windowed. 0 and scales we no longer offer mean "no
 ## preference" and leave the window alone.
+##
+## Never on the web build. The page owns the canvas there (html/canvas_resize_policy=2), so a new
+## window size cannot resize it, but the engine believes the size anyway: it lays the frame out
+## for it, draws it into the canvas's bottom-left corner and maps the mouse to match, until the
+## browser window next changes size. A scale saved in the browser before this guard is still
+## stored and shown; it just never lands.
 func _apply_resolution_scale(scale: int) -> void:
-	if not RESOLUTION_SCALES.has(scale):
+	if not RESOLUTION_SCALES.has(scale) or not can_resize_window():
 		return
 	var window := get_window()
 	if window == null or window.mode != Window.MODE_WINDOWED:
