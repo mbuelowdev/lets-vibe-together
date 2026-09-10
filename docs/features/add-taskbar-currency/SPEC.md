@@ -43,8 +43,8 @@ single correct way to.
 ### Files to create
 
 - `res://game_state.gd` — the autoload.
-- `res://egon/scenarios/rich.gd` — the `rich` scenario.
-- `res://egon/checks/add-taskbar-currency.json` — this feature's checks.
+- `res://.egon/scenarios/rich.gd` — the `rich` scenario.
+- `res://.egon/checks/add-taskbar-currency.json` — this feature's checks.
 
 ### Files to modify
 
@@ -55,7 +55,7 @@ single correct way to.
 - `res://taskbar.gd` — bind both controls to the autoload; add the §7 accessors; add both to
   `_util_controls()`.
 - `res://main.gd` — register the §7 bridge fields in the existing `_register_bridge_fields()`.
-- `res://egon/checks/add-taskbar-clock-and-volume-icon.json` — see §6.
+- `res://.egon/checks/add-taskbar-clock-and-volume-icon.json` — see §6.
 
 ### Existing patterns / conventions
 
@@ -163,7 +163,7 @@ than being cut — but raising `MAX_RUBLES` past 9 digits means re-measuring bot
 kopeks are below the resolution of anything this game will sell. `_group_digits()` still handles a
 leading minus, for price deltas — the balance itself cannot go negative.
 
-**Amendment to an earlier feature's checks.** `egon/checks/add-taskbar-clock-and-volume-icon.json`
+**Amendment to an earlier feature's checks.** `.egon/checks/add-taskbar-clock-and-volume-icon.json`
 asserted `taskbarUtilsVisible == 3` and an exact `taskbarUtilsOrder` of `"divider,volume,clock"`.
 Both are now false — the cluster has five members. That check is about the trio's reading order at
 the right end, so it is relaxed to `at_least: 3` and `contains: "divider,volume,clock"`, which
@@ -204,7 +204,7 @@ Coordinate note: the base viewport is 640×360 and the runner's space is 1:1 wit
 The money readout spans x468-564 at y328-360; `(545, 344)` is over the drawn text. Taskbar app icon
 centers are `(16, 344)` home, `(48, 344)` steam, `(80, 344)` chrome, `(112, 344)` cs2.
 
-The machine-executable checks live in `egon/checks/add-taskbar-currency.json`.
+The machine-executable checks live in `.egon/checks/add-taskbar-currency.json`.
 
 ## 9. Acceptance criteria
 

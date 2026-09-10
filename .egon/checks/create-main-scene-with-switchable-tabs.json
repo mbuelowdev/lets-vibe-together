@@ -4,6 +4,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().appIconCount", "equals": 4 },
       { "expect": "window.__egon.state().taskbarVisible", "equals": true },
       { "expect": "window.__egon.state().selectedApp", "equals": "home" },
@@ -16,6 +19,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "click": [80, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "chrome" },
@@ -29,6 +35,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().appIconCount", "equals": 4 },
       { "click": [48, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "steam" },

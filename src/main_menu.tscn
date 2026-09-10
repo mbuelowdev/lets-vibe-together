@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://qlxl4ya68b5"]
+
+[ext_resource type="Script" uid="uid://df51uri1ujk8k" path="res://src/main_menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" uid="uid://bkei2mdbwq5n" path="res://assets/images/main-menu-screen.png" id="2_screen"]
+[ext_resource type="Texture2D" uid="uid://brjtqoomubd61" path="res://assets/images/main-menu-title-text.png" id="3_title"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="4_theme"]
+
+[sub_resource type="Gradient" id="Gradient_scrim"]
+offsets = PackedFloat32Array(0, 0.1, 0.9, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.5176471, 0, 0, 0, 0.5176471, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_scrim"]
+gradient = SubResource("Gradient_scrim")
+width = 416
+height = 1
+
+[node name="MainMenu" type="Control" unique_id=235134111]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_menu")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1805539444]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_screen")
+expand_mode = 1
+stretch_mode = 2
+
+[node name="Scrim" type="TextureRect" parent="." unique_id=1962762227]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_right = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_scrim")
+expand_mode = 1
+
+[node name="Title" type="TextureRect" parent="." unique_id=237693551]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -128.0
+offset_top = 32.0
+offset_right = 128.0
+offset_bottom = 132.0
+grow_horizontal = 2
+mouse_filter = 2
+texture = ExtResource("3_title")
+expand_mode = 1
+stretch_mode = 2
+
+[node name="StartButton" type="Button" parent="." unique_id=1373584322]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_top = 163.0
+offset_right = 88.0
+offset_bottom = 197.0
+grow_horizontal = 2
+theme = ExtResource("4_theme")
+theme_override_font_sizes/font_size = 12
+text = "Start Game"
+
+[node name="SettingsButton" type="Button" parent="." unique_id=1612453656]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_top = 205.0
+offset_right = 88.0
+offset_bottom = 239.0
+grow_horizontal = 2
+theme = ExtResource("4_theme")
+theme_override_font_sizes/font_size = 12
+text = "Settings"
+
+[node name="CreditsButton" type="Button" parent="." unique_id=57449258]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_top = 247.0
+offset_right = 88.0
+offset_bottom = 281.0
+grow_horizontal = 2
+theme = ExtResource("4_theme")
+theme_override_font_sizes/font_size = 12
+text = "Credits"
+
+[node name="QuitButton" type="Button" parent="." unique_id=1275809838]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_top = 318.0
+offset_right = 88.0
+offset_bottom = 352.0
+grow_horizontal = 2
+theme = ExtResource("4_theme")
+theme_override_font_sizes/font_size = 12
+text = "Quit"

@@ -1,0 +1,130 @@
+[
+  {
+    "name": "A cold boot lands on the main menu, not the desktop",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuVisible", "equals": true },
+      { "expect": "window.__egon.state().mainMenuTitleVisible", "equals": true },
+      { "expect": "window.__egon.state().mainMenuButtons.join(',')", "equals": "Start Game,Settings,Credits,Quit" },
+      { "screenshot": "main-menu-boot" }
+    ]
+  },
+  {
+    "name": "The title and buttons stand on a scrim drawn over the backdrop and under both",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuScrimVisible", "equals": true },
+      { "expect": "window.__egon.state().mainMenuScrimBehindUi", "equals": true },
+      { "expect": "window.__egon.state().mainMenuScrimRect", "equals": "112,0,416x360" },
+      { "screenshot": "main-menu-scrim" }
+    ]
+  },
+  {
+    "name": "With no save on disk the first button offers to start a new game",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuStartIsContinue", "equals": false },
+      { "expect": "window.__egon.state().mainMenuButtons[0]", "equals": "Start Game" }
+    ]
+  },
+  {
+    "name": "With a save on disk the same button offers to continue instead",
+    "scenario": "saved_progress",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "await": "window.__egon.state().mainMenuStartIsContinue", "equals": true },
+      { "expect": "window.__egon.state().mainMenuButtons.join(',')", "equals": "Continue Game,Settings,Credits,Quit" },
+      { "screenshot": "main-menu-continue" }
+    ]
+  },
+  {
+    "name": "Start opens the desktop with home selected",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "expect": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "screenshot": "main-menu-start-opens-game" }
+    ]
+  },
+  {
+    "name": "Continue opens the same desktop and brings the saved balance with it",
+    "scenario": "saved_progress",
+    "steps": [
+      { "await": "window.__egon.state().mainMenuStartIsContinue", "equals": true },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "expect": "window.__egon.state().rubles", "equals": 4242 },
+      { "expect": "window.__egon.state().taskbarVisible", "equals": true }
+    ]
+  },
+  {
+    "name": "Credits is still a placeholder: pressing it leaves the menu where it was",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 269] },
+      { "expect": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuVisible", "equals": true }
+    ]
+  },
+  {
+    "name": "The first key press enters the menu rather than starting the game",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "" },
+      { "press": "Enter" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "StartButton" },
+      { "expect": "window.__egon.state().screen", "equals": "mainMenu" }
+    ]
+  },
+  {
+    "name": "Focus walks the four buttons in order and wraps at both ends",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "StartButton" },
+      { "press": "Up" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "QuitButton" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "StartButton" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "SettingsButton" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "CreditsButton" }
+    ]
+  },
+  {
+    "name": "The menu draws in the saved language, without the desktop having run first",
+    "scenario": "saved_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "await": "window.__egon.state().mainMenuButtons.join(',')", "contains": "Einstellungen,Mitwirkende,Beenden" },
+      { "screenshot": "main-menu-german" }
+    ]
+  },
+  {
+    "name": "The menu's own fields leave with it, so nothing downstream reads a screen that is gone",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().mainMenuVisible", "equals": true },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "expect": "window.__egon.fields().join(',')", "contains": "selectedApp" },
+      { "expect": "window.__egon.state().mainMenuVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().mainMenuButtons === undefined", "equals": true }
+    ]
+  }
+]

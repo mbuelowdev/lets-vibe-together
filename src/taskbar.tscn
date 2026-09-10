@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" uid="uid://xiqoh8l2bfd4" path="res://taskbar.gd" id="1_taskbar"]
+[ext_resource type="Script" uid="uid://xiqoh8l2bfd4" path="res://src/taskbar.gd" id="1_taskbar"]
 [ext_resource type="Texture2D" uid="uid://dpajuphm1ov2c" path="res://assets/images/taskbar-base.png" id="2_base"]
 [ext_resource type="Texture2D" uid="uid://da6b3wuxy8cqj" path="res://assets/images/taskbar-app-icons.png" id="3_icons"]
 [ext_resource type="Texture2D" uid="uid://dolt1dtsacus" path="res://assets/images/taskbar-util-icons.png" id="4_utils"]

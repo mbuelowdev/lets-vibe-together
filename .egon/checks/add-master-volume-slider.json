@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Master volume tops the settings column: its label, then the slider with its percentage beside it, at 25% on a first run",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().settingsControls.slice(0, 4).join(',')", "equals": "MasterVolumeLabel,MasterVolumeSlider,MasterVolumeValue,LanguageSelect" },
+      { "expect": "window.__egon.state().masterVolumeLabelText", "equals": "Master volume" },
+      { "expect": "window.__egon.state().masterVolumeSliderVisible", "equals": true },
+      { "expect": "window.__egon.state().masterVolumeSliderValue", "equals": 25 },
+      { "expect": "window.__egon.state().masterVolumeValueText", "equals": "25%" },
+      { "expect": "window.__egon.state().savedMasterVolume", "equals": 25 },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 25 },
+      { "screenshot": "settings-master-volume" }
+    ]
+  },
+  {
+    "name": "A key press on the slider is heard and written at once, without leaving the screen",
+    "scenario": "no_settings",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().settingsFileExists", "equals": false },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
+      { "press": "Left" },
+      { "expect": "window.__egon.state().masterVolumeSliderValue", "equals": 24 },
+      { "expect": "window.__egon.state().masterVolumeValueText", "equals": "24%" },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 24 },
+      { "expect": "window.__egon.state().savedMasterVolume", "equals": 24 },
+      { "expect": "window.__egon.state().settingsFileExists", "equals": true },
+      { "press": "Right" },
+      { "expect": "window.__egon.state().savedMasterVolume", "equals": 25 }
+    ]
+  },
+  {
+    "name": "Clicking the slider's track sets the volume where it was clicked",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "click": [302, 105] },
+      { "expect": "window.__egon.state().masterVolumeSliderValue", "equals": 50 },
+      { "expect": "window.__egon.state().masterVolumeValueText", "equals": "50%" },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 50 },
+      { "expect": "window.__egon.state().savedMasterVolume", "equals": 50 },
+      { "screenshot": "settings-master-volume-half" },
+      { "click": [371, 105] },
+      { "expect": "window.__egon.state().savedMasterVolume", "equals": 100 },
+      { "expect": "window.__egon.state().masterVolumeValueText", "equals": "100%" }
+    ]
+  },
+  {
+    "name": "A saved master volume is already in effect when the settings screen opens, and the slider shows it",
+    "scenario": "saved_settings",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "await": "window.__egon.state().savedMasterVolume", "equals": 40 },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 40 },
+      { "expect": "window.__egon.state().masterVolumeSliderValue", "equals": 40 },
+      { "expect": "window.__egon.state().masterVolumeValueText", "equals": "40%" }
+    ]
+  }
+]

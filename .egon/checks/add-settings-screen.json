@@ -1,0 +1,133 @@
+[
+  {
+    "name": "Settings on the main menu opens the settings screen: its own art, no title, the volume slider, the three dropdowns, Delete local save and Back",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().settingsVisible", "equals": true },
+      { "expect": "window.__egon.state().mainMenuVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().settingsBackground", "equals": "res://assets/images/settings-screen.png" },
+      { "expect": "window.__egon.state().settingsControls.join(',')", "equals": "MasterVolumeLabel,MasterVolumeSlider,MasterVolumeValue,LanguageSelect,ResolutionSelect,WindowModeSelect,DeleteSaveButton" },
+      { "expect": "window.__egon.state().settingsBackText", "equals": "Back" },
+      { "screenshot": "settings-screen" }
+    ]
+  },
+  {
+    "name": "The column is centred on the canvas and stands on the menu's scrim, over the art and under every control",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().settingsColumnRect", "equals": "232,79,176x202" },
+      { "expect": "window.__egon.state().settingsScrimVisible", "equals": true },
+      { "expect": "window.__egon.state().settingsScrimBehindUi", "equals": true },
+      { "expect": "window.__egon.state().settingsScrimRect", "equals": "200,0,240x360" },
+      { "screenshot": "settings-screen-scrim" }
+    ]
+  },
+  {
+    "name": "Back returns to the main menu and takes the settings screen's fields with it",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "click": [72, 327] },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuVisible", "equals": true },
+      { "expect": "window.__egon.state().settingsVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().languageSelectVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().deleteSaveButtonVisible === undefined", "equals": true }
+    ]
+  },
+  {
+    "name": "Escape leaves the settings screen the same way Back does",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "press": "Escape" },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" }
+    ]
+  },
+  {
+    "name": "The first key press enters the column at the volume slider, and focus walks it and wraps at both ends",
+    "scenario": "no_save",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
+      { "press": "Up" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "DeleteSaveButton" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "LanguageSelect" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "ResolutionSelect" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "WindowModeSelect" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "DeleteSaveButton" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" }
+    ]
+  },
+  {
+    "name": "A language picked here translates this screen at once and the menu it goes back to",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "press": "Space" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
+      { "press": "Down" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "LanguageSelect" },
+      { "press": "Space" },
+      { "press": "Down" },
+      { "press": "Enter" },
+      { "expect": "window.__egon.state().savedLocale", "equals": "zh_Hans" },
+      { "expect": "window.__egon.state().settingsBackText", "equals": "返回" },
+      { "expect": "window.__egon.state().masterVolumeLabelText", "equals": "主音量" },
+      { "expect": "window.__egon.state().windowModeOptions[0]", "equals": "窗口模式" },
+      { "screenshot": "settings-screen-chinese" },
+      { "press": "Escape" },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuButtons[1]", "equals": "设置" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "press": "Space" },
+      { "press": "Down" },
+      { "press": "Space" },
+      { "press": "Up" },
+      { "press": "Enter" },
+      { "expect": "window.__egon.state().savedLocale", "equals": "en" }
+    ]
+  },
+  {
+    "name": "Home no longer carries the three settings dropdowns",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "await": "window.__egon.state().saveQuitButtonVisible", "equals": true },
+      { "expect": "window.__egon.state().languageSelectVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().resolutionSelectVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().windowModeSelectVisible === undefined", "equals": true },
+      { "screenshot": "home-without-settings" }
+    ]
+  }
+]

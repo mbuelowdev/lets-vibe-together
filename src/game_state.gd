@@ -13,15 +13,15 @@ extends Node
 ## Persisted to user://save.cfg. There is one save and only one: the player never picks a
 ## slot, never names a file, and never loads anything but the state the last session left
 ## behind, so "load" is something that happens in _ready() rather than a screen. Deleting the
-## file is the only way back to a fresh start, which clear_save() does for Home's "Delete
-## local save" button and for the egon suite.
+## file is the only way back to a fresh start, which clear_save() does for the settings screen's
+## "Delete local save" button and for the egon suite.
 ##
 ## Preferences live in settings.gd and a separate file. Different lifetimes: wiping progress
 ## should not cost the player their language, and a save format change should not touch
 ## settings. See [settings.gd] for the storage story, which is otherwise the same one.
 ##
-## Writes are coalesced rather than immediate. Settings save on every change because three
-## dropdowns move by hand; a balance is mutated by gameplay - purchases now, income ticks
+## Writes are coalesced rather than immediate. Settings save on every change because they only
+## move by hand; a balance is mutated by gameplay - purchases now, income ticks
 ## later - and writing a file on each ruble would put a disk write inside a loop. Every
 ## mutation instead marks the state dirty and _process() flushes at most once every
 ## SAVE_INTERVAL seconds, so a burst of changes costs one write and the player can lose at
@@ -29,6 +29,17 @@ extends Node
 
 ## Emitted only when the balance actually changes, so listeners can redraw unconditionally.
 signal rubles_changed(rubles: int)
+
+## Emitted when the answer to save_file_exists() flips, so a screen that draws one thing for a
+## fresh start and another for a save in progress - the main menu's Start/Continue button - can
+## redraw instead of polling the filesystem every frame.
+##
+## Nothing a player does at the main menu creates or removes the file, so for them this fires
+## once at most, from the load in _ready(). It exists for the paths that change the file out
+## from under a screen that is already up: clear_save() behind the settings screen's "Delete local
+## save", and the egon scenarios, which are applied on the first frame - after the menu's _ready()
+## has already read the file and picked a label.
+signal save_presence_changed(exists: bool)
 
 ## Rubles are whole units: a float balance would accumulate rounding error across purchases,
 ## and kopeks are below the resolution of anything this game sells.
@@ -78,6 +89,11 @@ var _time_since_save := 0.0
 ## compare what is on disk against what is in memory without re-reading the file every frame.
 var _last_saved_rubles := -1
 
+## Whether the file was there the last time anything looked. Only save_presence_changed reads
+## it; save_file_exists() still asks the filesystem, so a check cannot be fooled by a stale
+## flag. Starts false so the load in _ready() announces a save that is already on disk.
+var _save_present := false
+
 ## Egon scenarios put the game into states a normal session would never reach. Left enabled,
 ## a scenario that hands the player a million rubles would persist it and every check that
 ## booted afterwards would inherit the fortune - user:// outlives a page load.
@@ -111,6 +127,10 @@ func _notification(what: int) -> void:
 ## Read the save into memory. Called once, from _ready(), before any scene exists - the
 ## taskbar reads the balance in its own _ready(), so it never sees the pre-load value.
 func load_game() -> void:
+	# First, and before any early return: re-syncing with the disk is this function's whole job,
+	# and every path out of it - no file, a version we cannot read, a clean load - leaves the
+	# answer to save_file_exists() settled.
+	_refresh_save_presence()
 	var config := ConfigFile.new()
 	if config.load(SAVE_PATH) != OK:
 		# No save on a first run, or one that will not parse. STARTING_RUBLES stands.
@@ -143,11 +163,12 @@ func save_game() -> void:
 		_time_since_save = 0.0
 		return
 	_mark_clean(_rubles)
+	_refresh_save_presence()
 
 
 ## Back to a fresh game: starting balance, no file. The only route to one, since the player
-## has no new-game button - Home's "Delete local save" and the egon scenario that has to undo
-## what an earlier check persisted both come through here.
+## has no new-game button - the settings screen's "Delete local save" and the egon scenario that
+## has to undo what an earlier check persisted both come through here.
 ##
 ## _mark_clean(-1) is what makes the deletion stick: it drops the dirty flag set by
 ## set_rubles() just above, so neither the next _process() tick nor the flush at shutdown
@@ -157,6 +178,7 @@ func clear_save() -> void:
 		DirAccess.remove_absolute(SAVE_PATH)
 	set_rubles(STARTING_RUBLES)
 	_mark_clean(-1)
+	_refresh_save_presence()
 
 
 ## Stop persisting for the rest of the session. One way on purpose: a scenario that turns
@@ -181,6 +203,16 @@ func last_saved_rubles() -> int:
 
 func save_file_exists() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
+
+
+## Emit save_presence_changed only when the file actually appeared or went away, so a listener
+## can rebuild its UI unconditionally the way the rubles_changed listeners do.
+func _refresh_save_presence() -> void:
+	var exists := save_file_exists()
+	if exists == _save_present:
+		return
+	_save_present = exists
+	save_presence_changed.emit(exists)
 
 
 func _mark_dirty() -> void:

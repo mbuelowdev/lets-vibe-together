@@ -4,6 +4,9 @@
     "scenario": "no_save",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().taskbarVisible", "equals": true },
       { "expect": "window.__egon.state().taskbarUtilsVisible", "equals": 5 },
       { "expect": "window.__egon.state().taskbarUtilsOrder.join(',')", "equals": "money,moneysign,divider,volume,clock" },
@@ -19,6 +22,9 @@
     "scenario": "rich",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().taskbarVisible", "equals": true },
       { "expect": "window.__egon.state().rubles", "equals": 1234567 },
       { "expect": "window.__egon.state().moneyText", "equals": "1  234  567  ₽" },
@@ -31,6 +37,9 @@
     "scenario": "rich",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "click": [112, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
@@ -44,6 +53,9 @@
     "scenario": "no_save",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "expect": "window.__egon.state().taskbarUtilsClickable", "equals": false },
       { "move": [545, 344] },

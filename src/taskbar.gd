@@ -96,7 +96,7 @@ func _process(delta: float) -> void:
 	_update_clock()
 
 
-## Focus wiring lives in main.gd, which owns both branches of the UI; the taskbar only hands out
+## Focus wiring lives in game.gd, which owns both branches of the UI; the taskbar only hands out
 ## its buttons and reports which one the caret is on.
 func app_button_count() -> int:
 	return _buttons.size()

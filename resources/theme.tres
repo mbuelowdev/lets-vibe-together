@@ -1,15 +1,15 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://dm3nk3u7xv065"]
+[gd_resource type="Theme" format=3 uid="uid://dm3nk3u7xv065"]
 
-[ext_resource type="Texture2D" uid="uid://dqlgx5hx5l08g" path="res://assets/images/ui-button.png" id="1_d4nwg"]
+[ext_resource type="Texture2D" uid="uid://dr4ukg4lefyss" path="res://assets/images/ui-button-retro.png" id="1_886mr"]
 [ext_resource type="FontVariation" uid="uid://bki2j4bomq2jo" path="res://resources/ui-font.tres" id="2_uifont"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iojti"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
 texture_margin_top = 2.0
-texture_margin_right = 2.0
-texture_margin_bottom = 4.0
-region_rect = Rect2(65, 1, 14, 14)
+texture_margin_right = 7.0
+texture_margin_bottom = 11.0
+region_rect = Rect2(128, 2, 32, 28)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_focus"]
 draw_center = false
@@ -24,76 +24,76 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vidcg"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 2.0
-texture_margin_right = 2.0
-texture_margin_bottom = 4.0
-region_rect = Rect2(33, 1, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 11.0
+region_rect = Rect2(64, 2, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1bvpa"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 3.0
-texture_margin_right = 2.0
-texture_margin_bottom = 3.0
-region_rect = Rect2(49, 1, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 9.0
+texture_margin_right = 7.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(96, 2, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_60yue"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 2.0
-texture_margin_right = 2.0
-texture_margin_bottom = 4.0
-region_rect = Rect2(1, 1, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 11.0
+region_rect = Rect2(0, 2, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iehnn"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 3.0
-texture_margin_right = 2.0
-texture_margin_bottom = 3.0
-region_rect = Rect2(17, 1, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 9.0
+texture_margin_right = 7.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(32, 2, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_disabled"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 2.0
-texture_margin_right = 2.0
-texture_margin_bottom = 4.0
-region_rect = Rect2(65, 17, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 11.0
+region_rect = Rect2(128, 34, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_hover"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 2.0
-texture_margin_right = 2.0
-texture_margin_bottom = 4.0
-region_rect = Rect2(33, 17, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 11.0
+region_rect = Rect2(64, 34, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_hover_pressed"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 3.0
-texture_margin_right = 2.0
-texture_margin_bottom = 3.0
-region_rect = Rect2(49, 17, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 9.0
+texture_margin_right = 7.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(96, 34, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_normal"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 2.0
-texture_margin_right = 2.0
-texture_margin_bottom = 4.0
-region_rect = Rect2(1, 17, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 11.0
+region_rect = Rect2(0, 34, 32, 28)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_danger_pressed"]
-texture = ExtResource("1_d4nwg")
-texture_margin_left = 2.0
-texture_margin_top = 3.0
-texture_margin_right = 2.0
-texture_margin_bottom = 3.0
-region_rect = Rect2(17, 17, 14, 14)
+texture = ExtResource("1_886mr")
+texture_margin_left = 7.0
+texture_margin_top = 9.0
+texture_margin_right = 7.0
+texture_margin_bottom = 9.0
+region_rect = Rect2(32, 34, 32, 28)
 
 [resource]
 default_font = ExtResource("2_uifont")
@@ -110,3 +110,4 @@ DangerousButton/styles/hover = SubResource("StyleBoxTexture_danger_hover")
 DangerousButton/styles/hover_pressed = SubResource("StyleBoxTexture_danger_hover_pressed")
 DangerousButton/styles/normal = SubResource("StyleBoxTexture_danger_normal")
 DangerousButton/styles/pressed = SubResource("StyleBoxTexture_danger_pressed")
+OptionButton/constants/arrow_margin = 10

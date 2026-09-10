@@ -45,7 +45,7 @@ Then:
 rg -n "SCRIPT ERROR|ERROR:|WARNING:|Parse Error|Compile Error" /tmp/godot-run.log
 ```
 
-**Expect:** process exits (does not hang). Fail if exit ≠ 0 **or** the log contains `SCRIPT ERROR` / `ERROR:` / parse/compile errors. `--quit-after 60` loads `res://main.tscn` (or `--scene`) and runs ~60 frames.
+**Expect:** process exits (does not hang). Fail if exit ≠ 0 **or** the log contains `SCRIPT ERROR` / `ERROR:` / parse/compile errors. `--quit-after 60` loads `res://src/main_menu.tscn` (or `--scene`) and runs ~60 frames.
 
 If the failure is unclear:
 

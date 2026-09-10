@@ -1,0 +1,276 @@
+[gd_scene format=3 uid="uid://cehlv0g8b6oud"]
+
+[ext_resource type="Script" uid="uid://c0k4sghcq23qg" path="res://src/settings_screen.gd" id="1_settings"]
+[ext_resource type="Texture2D" uid="uid://b75250mcw3pin" path="res://assets/images/settings-screen.png" id="2_screen"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="3_theme"]
+
+[sub_resource type="Gradient" id="Gradient_scrim"]
+offsets = PackedFloat32Array(0, 0.1, 0.9, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.73333335, 0, 0, 0, 0.73333335, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_scrim"]
+gradient = SubResource("Gradient_scrim")
+width = 416
+height = 1
+
+[node name="SettingsScreen" type="Control" unique_id=642500806]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_settings")
+
+[node name="Background" type="TextureRect" parent="." unique_id=1958140617]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_screen")
+expand_mode = 1
+stretch_mode = 2
+
+[node name="Scrim" type="TextureRect" parent="." unique_id=1842843700]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -478.0
+offset_right = 460.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_scrim")
+expand_mode = 1
+
+[node name="MasterVolumeLabel" type="Label" parent="." unique_id=1370021593]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -101.0
+offset_right = 88.0
+offset_bottom = -83.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+text = "Master volume"
+horizontal_alignment = 1
+
+[node name="MasterVolumeSlider" type="HSlider" parent="." unique_id=884216377]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -83.0
+offset_right = 52.0
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+value = 25.0
+
+[node name="MasterVolumeValue" type="Label" parent="." unique_id=1502934871]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 56.0
+offset_top = -83.0
+offset_right = 88.0
+offset_bottom = -67.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+text = "25%"
+horizontal_alignment = 2
+
+[node name="LanguageSelect" type="OptionButton" parent="." unique_id=1695843778]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -59.0
+offset_right = 88.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+alignment = 1
+
+[node name="ResolutionSelect" type="OptionButton" parent="." unique_id=1695843776]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = -17.0
+offset_right = 88.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+alignment = 1
+
+[node name="WindowModeSelect" type="OptionButton" parent="." unique_id=1695843777]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = 25.0
+offset_right = 88.0
+offset_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+alignment = 1
+
+[node name="DeleteSaveButton" type="Button" parent="." unique_id=1695843780]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -88.0
+offset_top = 67.0
+offset_right = 88.0
+offset_bottom = 101.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+theme_type_variation = &"DangerousButton"
+theme_override_font_sizes/font_size = 12
+text = "Delete local save"
+
+[node name="BackButton" type="Button" parent="." unique_id=1819941045]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -50.0
+offset_right = 128.0
+offset_bottom = -16.0
+grow_vertical = 0
+focus_mode = 1
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+text = "Back"
+
+[node name="ConfirmDelete" type="Control" parent="." unique_id=1695843781]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_theme")
+
+[node name="Shade" type="ColorRect" parent="ConfirmDelete" unique_id=1695843782]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.5490196)
+
+[node name="Panel" type="ColorRect" parent="ConfirmDelete" unique_id=1695843783]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = -58.0
+offset_right = 152.0
+offset_bottom = 58.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.65882355, 0.72156864, 0.84705883, 1)
+
+[node name="Fill" type="ColorRect" parent="ConfirmDelete/Panel" unique_id=1695843784]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.105882354, 0.15686275, 0.21960784, 1)
+
+[node name="Message" type="Label" parent="ConfirmDelete/Panel" unique_id=1695843785]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = -12.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 12
+text = "Are you sure you want to delete your save? All progress will be lost!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ConfirmYesButton" type="Button" parent="ConfirmDelete/Panel" unique_id=1695843786]
+layout_mode = 1
+offset_left = 12.0
+offset_top = 82.0
+offset_right = 148.0
+offset_bottom = 106.0
+theme = ExtResource("3_theme")
+theme_type_variation = &"DangerousButton"
+theme_override_font_sizes/font_size = 12
+text = "Yes, delete it!"
+
+[node name="ConfirmCancelButton" type="Button" parent="ConfirmDelete/Panel" unique_id=1695843787]
+layout_mode = 1
+offset_left = 156.0
+offset_top = 82.0
+offset_right = 292.0
+offset_bottom = 106.0
+theme = ExtResource("3_theme")
+theme_override_font_sizes/font_size = 12
+text = "Cancel"

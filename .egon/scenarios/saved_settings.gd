@@ -1,5 +1,5 @@
-## A settings file already on disk, so a check can prove the dropdowns boot from the file
-## rather than from the OS locale and the live window size.
+## A settings file already on disk, so a check can prove the dropdowns and the volume slider
+## boot from the file rather than from the OS locale, the live window size and the 25% default.
 ##
 ## The file is written here and then loaded through the same Settings.load_settings() a cold
 ## boot calls, because the check vocabulary has no page-reload step: seeding user:// and
@@ -9,6 +9,7 @@ extends RefCounted
 
 const PATH := "user://settings.cfg"
 const SECTION := "video"
+const AUDIO_SECTION := "audio"
 
 ## German because it is nowhere near any plausible OS locale on a test runner, so a passing
 ## check cannot be the fallback quietly agreeing with the saved value.
@@ -22,12 +23,17 @@ const RESOLUTION_SCALE := 2
 ## seeding one would test the refusal, not the load.
 const WINDOW_MODE := "WINDOW_MODE_WINDOWED"
 
+## Anything but 25, which is where a first run has it, so a passing check cannot be the
+## default quietly agreeing with the file. A whole percent, matching the slider's 1% step.
+const MASTER_VOLUME := 40
+
 
 func apply() -> void:
 	var config := ConfigFile.new()
 	config.set_value(SECTION, "locale", LOCALE)
 	config.set_value(SECTION, "resolution_scale", RESOLUTION_SCALE)
 	config.set_value(SECTION, "window_mode", WINDOW_MODE)
+	config.set_value(AUDIO_SECTION, "master_volume", MASTER_VOLUME)
 	if config.save(PATH) != OK:
 		push_error("saved_settings scenario: could not write %s" % PATH)
 		return

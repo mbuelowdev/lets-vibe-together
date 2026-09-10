@@ -4,6 +4,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().taskbarVisible", "equals": true },
       { "expect": "window.__egon.state().taskbarUtilsVisible", "at_least": 3 },
       { "expect": "window.__egon.state().taskbarUtilsOrder.join(',')", "contains": "divider,volume,clock" },
@@ -17,6 +20,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().clockMatchesSystemTime", "equals": true },
       { "expect": "window.__egon.state().clockText.length", "equals": 5 },
       { "expect": "window.__egon.state().clockText", "contains": ":" },
@@ -28,6 +34,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "expect": "window.__egon.state().taskbarUtilsClickable", "equals": false },
       { "move": [588, 344] },

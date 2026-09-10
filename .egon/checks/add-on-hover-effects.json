@@ -4,6 +4,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().hoverEnterCount", "equals": 0 },
       { "move": [48, 344] },
       { "expect": "window.__egon.state().hoveredApp", "equals": "steam" },
@@ -18,6 +21,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "move": [16, 344] },
       { "expect": "window.__egon.state().hoveredApp", "equals": "home" },
@@ -31,6 +37,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "move": [80, 344] },
       { "await": "window.__egon.state().hoveredApp", "equals": "chrome" },
       { "move": [500, 100] },

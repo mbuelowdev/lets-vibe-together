@@ -197,7 +197,7 @@ the runner's 640×360 space is exactly 2× Godot coordinates. Icon centers are a
 `(32, 328)` home, `(96, 328)` steam, `(160, 328)` chrome, `(224, 328)` cs2; `(500, 100)` is empty
 background above the taskbar.
 
-The machine-executable checks live in `egon/checks/add-on-hover-effects.json`.
+The machine-executable checks live in `.egon/checks/add-on-hover-effects.json`.
 
 ## 9. Acceptance criteria
 

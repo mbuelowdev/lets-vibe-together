@@ -4,6 +4,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "expect": "window.__egon.state().screenVisible", "equals": false },
       { "expect": "window.__egon.state().screenTexture", "equals": "" },
@@ -16,6 +19,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().selectedApp", "equals": "home" },
       { "click": [112, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
@@ -31,6 +37,9 @@
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "click": [112, 344] },
       { "await": "window.__egon.state().screenVisible", "equals": true },
       { "click": [16, 344] },

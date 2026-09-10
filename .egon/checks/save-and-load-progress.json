@@ -4,6 +4,9 @@
     "scenario": "no_save",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().taskbarVisible", "equals": true },
       { "expect": "window.__egon.state().saveFileExists", "equals": false },
       { "expect": "window.__egon.state().savedRubles", "equals": -1 },
@@ -17,6 +20,9 @@
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().rubles", "equals": 4242 },
       { "expect": "window.__egon.state().saveFileExists", "equals": true },
       { "expect": "window.__egon.state().moneyText", "equals": "4  242  ₽" },
@@ -30,6 +36,9 @@
     "scenario": "earned",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().savedRubles", "equals": 7777 },
       { "expect": "window.__egon.state().rubles", "equals": 7777 },
       { "expect": "window.__egon.state().saveFileExists", "equals": true },
@@ -42,6 +51,9 @@
     "name": "A scenario that fabricates a balance never writes it, so no check inherits it",
     "scenario": "rich",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().rubles", "equals": 1234567 },
       { "expect": "window.__egon.state().autosaveEnabled", "equals": false },
       { "expect": "window.__egon.state().savePending", "equals": false },

@@ -18,7 +18,7 @@ extends Node
 ##
 ## 2. Scenarios. A scenario is a named routine that puts the game into a specific state,
 ##    so verification is not limited to what a cold boot can reach. Drop a script in
-##    res://egon/scenarios/{name}.gd exposing `func apply() -> void:` and it registers
+##    res://.egon/scenarios/{name}.gd exposing `func apply() -> void:` and it registers
 ##    itself under its file name. Game code may also call `register_scenario()` directly.
 ##
 ##    Selected at startup, once, from either front door:
@@ -39,7 +39,7 @@ extends Node
 ## back into GDScript. JavaScriptBridge.create_callback return values are not dependable
 ## across Godot 4 point releases; JavaScriptBridge.eval is.
 
-const SCENARIO_DIR := "res://egon/scenarios"
+const SCENARIO_DIR := "res://.egon/scenarios"
 const DEFAULT_SCENARIO := "default"
 const SCENARIO_ARG_PREFIX := "--egon-scenario="
 
@@ -104,7 +104,7 @@ func registered_fields() -> PackedStringArray:
 	return names
 
 
-## Register a scenario by name. Scripts in res://egon/scenarios are picked up
+## Register a scenario by name. Scripts in res://.egon/scenarios are picked up
 ## automatically; this is for scenarios built somewhere else.
 func register_scenario(name: String, applier: Callable) -> void:
 	if name.is_empty():
@@ -210,7 +210,7 @@ func _push_scenario_meta() -> void:
 	)
 
 
-## Load every res://egon/scenarios/*.gd and register it under its file name.
+## Load every res://.egon/scenarios/*.gd and register it under its file name.
 ## Convention beats registration order: the file name is the scenario name, so nothing
 ## depends on which node happened to run _ready() first.
 func _load_scenario_scripts() -> void:

@@ -39,7 +39,7 @@
 
 ### Existing patterns / conventions
 
-- `egon/egon_bridge.gd` is an autoload. Register fields with `get_node("/root/EgonBridge").register_field(...)` — never the bare `EgonBridge` identifier, because `--check-only` does not load autoloads.
+- `.egon/egon_bridge.gd` is an autoload. Register fields with `get_node("/root/EgonBridge").register_field(...)` — never the bare `EgonBridge` identifier, because `--check-only` does not load autoloads.
 - One scene file per component with a same-named script beside it (`taskbar.tscn` / `taskbar.gd`), scenes at the repo root, matching `main.tscn` at the root.
 - GDScript: tabs for indentation, typed declarations, `snake_case` members, `SCREAMING_SNAKE` constants.
 
@@ -186,7 +186,7 @@ native height is now scaled to fill the 32 px bar rather than resizing it.
 
 ## 7. Verification hooks
 
-- Mechanism: the `EgonBridge` autoload, already in the project (`res://egon/egon_bridge.gd`). The implementer calls `get_node("/root/EgonBridge").register_field("selectedApp", func(): return taskbar.selected_app_id())` — one such call per field listed below, in `main.gd`'s `_ready()`. Do not use the bare `EgonBridge` identifier — `--check-only` does not load autoloads. Do not hand-roll `JavaScriptBridge` and do not reassign `window.__egon`.
+- Mechanism: the `EgonBridge` autoload, already in the project (`res://.egon/egon_bridge.gd`). The implementer calls `get_node("/root/EgonBridge").register_field("selectedApp", func(): return taskbar.selected_app_id())` — one such call per field listed below, in `main.gd`'s `_ready()`. Do not use the bare `EgonBridge` identifier — `--check-only` does not load autoloads. Do not hand-roll `JavaScriptBridge` and do not reassign `window.__egon`.
 - Call: `window.__egon.state()` returns a JSON object of every registered field.
 - Fields this feature registers, with type and meaning:
   - `selectedApp` (`string`) — app id of the currently selected tab: `"home"`, `"steam"`, `"chrome"` or `"cs2"`.
@@ -213,5 +213,5 @@ native height is now scaled to fill the 32 px bar rather than resizing it.
 
 - Do not add the utility icons, a clock, or a start menu to the taskbar.
 - Do not add input map actions or keyboard shortcuts.
-- Do not add addons, plugins, or new autoloads, and do not edit `egon/egon_bridge.gd`.
+- Do not add addons, plugins, or new autoloads, and do not edit `.egon/egon_bridge.gd`.
 - Do not create a scenario script; `default` covers this feature.

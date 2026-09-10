@@ -4,6 +4,9 @@
     "scenario": "no_settings",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().languageSelectVisible", "equals": true },
       { "expect": "window.__egon.state().settingsFileExists", "equals": false },
       { "expect": "window.__egon.state().savedLocale", "equals": "" },
@@ -13,10 +16,13 @@
     ]
   },
   {
-    "name": "A settings file on disk drives the dropdowns at game start, not the OS locale or the window size",
+    "name": "A settings file on disk drives the dropdowns, not the OS locale or the window size",
     "scenario": "saved_settings",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().savedLocale", "equals": "de" },
       { "expect": "window.__egon.state().locale", "equals": "de" },
       { "expect": "window.__egon.state().selectedLanguage", "equals": "Deutsch" },
@@ -32,9 +38,14 @@
     "scenario": "no_settings",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().languageSelectVisible", "equals": true },
       { "expect": "window.__egon.state().settingsFileExists", "equals": false },
       { "press": "Space" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
+      { "press": "Down" },
       { "expect": "window.__egon.state().focusedControl", "equals": "LanguageSelect" },
       { "press": "Space" },
       { "press": "Down" },

@@ -1,15 +1,18 @@
 [
   {
-    "name": "Home offers Delete local save directly above Save & Quit, and it asks before it wipes anything",
+    "name": "Settings offers Delete local save last in the column, and it asks before it wipes anything",
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
-      { "expect": "window.__egon.state().saveQuitButtonVisible", "equals": true },
+      { "expect": "window.__egon.state().settingsControls.slice(-1).join(',')", "equals": "DeleteSaveButton" },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
       { "expect": "window.__egon.state().rubles", "equals": 4242 },
       { "expect": "window.__egon.state().saveFileExists", "equals": true },
-      { "click": [320, 236] },
+      { "click": [320, 264] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
       { "expect": "window.__egon.state().confirmDeleteMessage", "contains": "All progress will be lost!" },
       { "expect": "window.__egon.state().rubles", "equals": 4242 },
@@ -22,8 +25,11 @@
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
-      { "click": [320, 236] },
+      { "click": [320, 264] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
       { "expect": "window.__egon.state().focusedControl", "equals": "ConfirmCancelButton" },
       { "click": [392, 216] },
@@ -35,18 +41,26 @@
     ]
   },
   {
-    "name": "Escape dismisses the question the same way Cancel does",
+    "name": "Escape answers the question the way Cancel does, without leaving the settings screen",
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
-      { "click": [320, 236] },
+      { "click": [320, 264] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
       { "press": "Escape" },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "expect": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "DeleteSaveButton" },
       { "expect": "window.__egon.state().saveFileExists", "equals": true },
       { "expect": "window.__egon.state().rubles", "equals": 4242 },
-      { "screenshot": "delete-save-escaped" }
+      { "screenshot": "delete-save-escaped" },
+      { "press": "Escape" },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuStartIsContinue", "equals": true }
     ]
   },
   {
@@ -54,16 +68,26 @@
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().rubles", "equals": 4242 },
       { "expect": "window.__egon.state().saveFileExists", "equals": true },
-      { "click": [320, 236] },
+      { "click": [320, 264] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
       { "click": [248, 216] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
+      { "expect": "window.__egon.state().focusedControl", "equals": "DeleteSaveButton" },
       { "expect": "window.__egon.state().rubles", "equals": 1337 },
-      { "expect": "window.__egon.state().moneyText", "equals": "1  337  ₽" },
       { "expect": "window.__egon.state().saveFileExists", "equals": false },
-      { "screenshot": "delete-save-confirmed" }
+      { "screenshot": "delete-save-confirmed" },
+      { "click": [72, 327] },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuStartIsContinue", "equals": false },
+      { "expect": "window.__egon.state().mainMenuButtons[0]", "equals": "Start Game" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "expect": "window.__egon.state().moneyText", "equals": "1  337  ₽" }
     ]
   },
   {
@@ -71,10 +95,17 @@
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().saveFileExists", "equals": true },
-      { "expect": "window.__egon.state().savedRubles", "equals": 4242 },
-      { "click": [320, 236] },
+      { "click": [320, 264] },
       { "click": [248, 216] },
+      { "expect": "window.__egon.state().saveFileExists", "equals": false },
+      { "click": [72, 327] },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
       { "expect": "window.__egon.state().autosaveEnabled", "equals": true },
       { "expect": "window.__egon.state().savePending", "equals": false },
       { "expect": "window.__egon.state().savedRubles", "equals": -1 },
@@ -84,43 +115,50 @@
     ]
   },
   {
-    "name": "The question is modal: the taskbar behind the shade does not take the click",
+    "name": "The question is modal: Back behind the shade does not take the click",
     "scenario": "saved_progress",
     "proof": "screenshot",
     "steps": [
-      { "await": "window.__egon.state().selectedApp", "equals": "home" },
-      { "click": [320, 236] },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
+      { "click": [320, 264] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
-      { "click": [112, 344] },
-      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
-      { "expect": "window.__egon.state().appSwitchCount", "equals": 0 },
+      { "click": [72, 327] },
+      { "expect": "window.__egon.state().screen", "equals": "settings" },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
+      { "expect": "window.__egon.state().saveFileExists", "equals": true },
       { "screenshot": "delete-save-modal" }
     ]
   },
   {
-    "name": "Both the button and the question follow the language dropdown",
+    "name": "Both the button and the question follow the language setting",
     "scenario": "saved_settings",
     "proof": "screenshot",
     "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
       { "await": "window.__egon.state().locale", "equals": "de" },
-      { "click": [320, 236] },
+      { "click": [320, 264] },
       { "expect": "window.__egon.state().confirmDeleteVisible", "equals": true },
       { "expect": "window.__egon.state().confirmDeleteMessage", "contains": "Fortschritt geht verloren" },
       { "screenshot": "delete-save-localised" }
     ]
   },
   {
-    "name": "Delete local save belongs to Home and leaves with it",
+    "name": "Home no longer offers Delete local save: Save & Quit stands there alone",
     "scenario": "no_save",
     "proof": "screenshot",
     "steps": [
-      { "await": "window.__egon.state().deleteSaveButtonVisible", "equals": true },
-      { "click": [112, 344] },
-      { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
-      { "expect": "window.__egon.state().deleteSaveButtonVisible", "equals": false },
-      { "expect": "window.__egon.state().confirmDeleteVisible", "equals": false },
-      { "screenshot": "delete-save-home-only" }
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "await": "window.__egon.state().saveQuitButtonVisible", "equals": true },
+      { "expect": "window.__egon.state().deleteSaveButtonVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().confirmDeleteVisible === undefined", "equals": true },
+      { "screenshot": "delete-save-not-on-home" }
     ]
   }
 ]
