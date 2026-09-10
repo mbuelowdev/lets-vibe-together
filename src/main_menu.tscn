@@ -121,5 +121,6 @@ offset_right = 88.0
 offset_bottom = 352.0
 grow_horizontal = 2
 theme = ExtResource("4_theme")
+theme_type_variation = &"DangerousButton"
 theme_override_font_sizes/font_size = 12
 text = "Quit"
