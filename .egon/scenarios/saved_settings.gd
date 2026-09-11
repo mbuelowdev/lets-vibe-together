@@ -1,5 +1,6 @@
-## A settings file already on disk, so a check can prove the dropdowns and the volume slider
-## boot from the file rather than from the OS locale, the live window size and the 25% default.
+## A settings file already on disk, so a check can prove the dropdowns and the volume sliders
+## boot from the file rather than from the OS locale, the live window size and the first-run
+## volumes.
 ##
 ## The file is written here and then loaded through the same Settings.load_settings() a cold
 ## boot calls, because the check vocabulary has no page-reload step: seeding user:// and
@@ -27,6 +28,11 @@ const WINDOW_MODE := "WINDOW_MODE_WINDOWED"
 ## default quietly agreeing with the file. A whole percent, matching the slider's 1% step.
 const MASTER_VOLUME := 40
 
+## Anything but 100, where a first run has them, and apart from each other and from master, so a
+## passing check cannot be a default - or the wrong slider's value - quietly agreeing with the file.
+const MUSIC_VOLUME := 60
+const SFX_VOLUME := 80
+
 
 func apply() -> void:
 	var config := ConfigFile.new()
@@ -34,6 +40,8 @@ func apply() -> void:
 	config.set_value(SECTION, "resolution_scale", RESOLUTION_SCALE)
 	config.set_value(SECTION, "window_mode", WINDOW_MODE)
 	config.set_value(AUDIO_SECTION, "master_volume", MASTER_VOLUME)
+	config.set_value(AUDIO_SECTION, "music_volume", MUSIC_VOLUME)
+	config.set_value(AUDIO_SECTION, "sfx_volume", SFX_VOLUME)
 	if config.save(PATH) != OK:
 		push_error("saved_settings scenario: could not write %s" % PATH)
 		return

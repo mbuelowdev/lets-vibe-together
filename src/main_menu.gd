@@ -12,9 +12,9 @@ extends Control
 ##
 ## Start and Continue are one button, not two, because there is one save and the player never picks
 ## a slot: the file either exists, in which case the label reads Continue, or it does not, in which
-## case it reads Start. Both do exactly the same thing - open res://src/game.tscn - because GameState
-## has already read the save in its own _ready(), long before this screen exists. There is nothing
-## here to load.
+## case it reads Start. Both do exactly the same thing - ask SceneTransition to fade into
+## res://src/game.tscn - because GameState has already read the save in its own _ready(), long
+## before this screen exists. There is nothing here to load; the "Loading" hold is theatre.
 ##
 ## Settings opens settings_screen.tscn - its own room art under a copy of this scrim - whose Back
 ## button comes straight here again. Credits is wired and inert: it gets its own screen in the
@@ -26,10 +26,10 @@ extends Control
 ## TranslationServer already says.
 ##
 ## The menu track lives on the Music autoload, not on this scene, because Start and Settings both
-## change_scene_to_file() and that would free a child player. This screen is the one that asks
-## for play() and for muffle off; Settings (and Credits, when it lands) only muffle; the desktop
-## stops. play() is a no-op while the song is already going, so Back from Settings does not
-## rewind it.
+## leave this screen and that would free a child player. This screen is the one that asks for the
+## menu track and for muffle off; Settings leaves the music alone; Start's fade asks Music to die
+## with the picture, and the desktop plays its own track. play() is a no-op while the same track
+## is already going, so Back from Settings does not rewind it.
 
 const GAME_SCENE := "res://src/game.tscn"
 const SETTINGS_SCENE := "res://src/settings_screen.tscn"
@@ -166,14 +166,14 @@ func _wire_focus_navigation() -> void:
 		button.focus_neighbor_bottom = button.get_path_to(_buttons[(i + 1) % count])
 
 
-## Clear the side-room muffle and start the track if it is not already going. Cold boot starts
-## it; Back from Settings leaves the playhead alone.
+## Clear any muffle and start the menu track if it is not already going. Cold boot starts it;
+## Back from Settings leaves the playhead alone.
 func _enter_music() -> void:
 	var music := get_node_or_null("/root/Music")
 	if music == null:
 		return
 	music.set_muffled(false)
-	music.play()
+	music.play(music.MENU_TRACK)
 
 
 ## Godot routes ui_* navigation through the focused Control and drops it when there is none, so
@@ -194,6 +194,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_start_pressed() -> void:
+	var transition := get_node_or_null("/root/SceneTransition")
+	if transition != null:
+		transition.to_scene(GAME_SCENE)
+		return
 	var music := get_node_or_null("/root/Music")
 	if music != null:
 		music.stop()
@@ -201,9 +205,6 @@ func _on_start_pressed() -> void:
 
 
 func _on_settings_pressed() -> void:
-	var music := get_node_or_null("/root/Music")
-	if music != null:
-		music.set_muffled(true)
 	_open(SETTINGS_SCENE)
 
 
@@ -222,10 +223,10 @@ func _on_credits_pressed() -> void:
 	pass
 
 
-## No save on the way out, unlike Home's "Save & Quit". Nothing reachable from this screen changes
-## anything worth writing: preferences already write themselves as they change, and the balance
-## has only ever been read from disk here. There is nothing to flush that is not already flushed.
-## On the web export quit stops the main loop rather than closing the tab.
+## No save on the way out, unlike the pause menu's Save & Quit. Nothing reachable from this screen
+## changes anything worth writing: preferences already write themselves as they change, and the
+## balance has only ever been read from disk here. There is nothing to flush that is not already
+## flushed. On the web export quit stops the main loop rather than closing the tab.
 func _on_quit_pressed() -> void:
 	get_tree().quit()
 

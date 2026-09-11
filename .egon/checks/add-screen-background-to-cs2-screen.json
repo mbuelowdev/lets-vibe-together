@@ -7,7 +7,7 @@
       { "await": "window.__egon.state().screen", "equals": "mainMenu" },
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
-      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "await": "window.__egon.state().selectedApp", "equals": "steam" },
       { "expect": "window.__egon.state().screenVisible", "equals": false },
       { "expect": "window.__egon.state().screenTexture", "equals": "" },
       { "expect": "window.__egon.state().taskbarAboveScreen", "equals": true },
@@ -22,7 +22,7 @@
       { "await": "window.__egon.state().screen", "equals": "mainMenu" },
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
-      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "await": "window.__egon.state().selectedApp", "equals": "steam" },
       { "click": [112, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
       { "expect": "window.__egon.state().screenVisible", "equals": true },
@@ -33,7 +33,7 @@
     ]
   },
   {
-    "name": "Switching back to home hides the screen art and restores the flat colour",
+    "name": "Switching back to Steam hides the screen art and restores the flat colour",
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
@@ -42,12 +42,12 @@
       { "await": "window.__egon.state().screen", "equals": "game" },
       { "click": [112, 344] },
       { "await": "window.__egon.state().screenVisible", "equals": true },
-      { "click": [16, 344] },
-      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "click": [48, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "steam" },
       { "expect": "window.__egon.state().screenVisible", "equals": false },
       { "expect": "window.__egon.state().screenTexture", "equals": "" },
-      { "expect": "window.__egon.state().backgroundColor", "equals": "#2e4272" },
-      { "screenshot": "back-to-home-flat" }
+      { "expect": "window.__egon.state().backgroundColor", "equals": "#1b2838" },
+      { "screenshot": "back-to-steam-flat" }
     ]
   }
 ]

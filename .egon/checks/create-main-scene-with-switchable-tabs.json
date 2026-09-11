@@ -1,6 +1,6 @@
 [
   {
-    "name": "Boots into the taskbar shell with home selected",
+    "name": "Boots into the taskbar shell with Steam selected",
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
@@ -9,23 +9,23 @@
       { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().appIconCount", "equals": 4 },
       { "expect": "window.__egon.state().taskbarVisible", "equals": true },
-      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
-      { "expect": "window.__egon.state().backgroundColor", "equals": "#2e4272" },
-      { "screenshot": "boot-taskbar-home" }
+      { "expect": "window.__egon.state().selectedApp", "equals": "steam" },
+      { "expect": "window.__egon.state().backgroundColor", "equals": "#1b2838" },
+      { "screenshot": "boot-taskbar-steam" }
     ]
   },
   {
-    "name": "Clicking the chrome icon selects it and repaints the background",
+    "name": "Clicking the chrome icon selects it and repaints the background yellow",
     "scenario": "default",
     "proof": "screenshot",
     "steps": [
       { "await": "window.__egon.state().screen", "equals": "mainMenu" },
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
-      { "await": "window.__egon.state().selectedApp", "equals": "home" },
+      { "await": "window.__egon.state().selectedApp", "equals": "steam" },
       { "click": [80, 344] },
       { "expect": "window.__egon.state().selectedApp", "equals": "chrome" },
-      { "expect": "window.__egon.state().backgroundColor", "equals": "#3f6b3a" },
+      { "expect": "window.__egon.state().backgroundColor", "equals": "#fbbc04" },
       { "expect": "window.__egon.state().appSwitchCount", "at_least": 1 },
       { "screenshot": "chrome-selected" }
     ]
@@ -39,8 +39,8 @@
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().appIconCount", "equals": 4 },
-      { "click": [48, 344] },
-      { "expect": "window.__egon.state().selectedApp", "equals": "steam" },
+      { "click": [80, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "chrome" },
       { "click": [112, 344] },
       { "expect": "window.__egon.state().selectedAppIndex", "equals": 3 },
       { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },

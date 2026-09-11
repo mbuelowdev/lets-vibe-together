@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Music volume and Sound effects volume sit under Master volume, each with its caption and percentage, at 25% and 50% on a first run while master stays at 25%",
+    "scenario": "no_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().settingsControls.slice(0, 10).join(',')", "equals": "MasterVolumeLabel,MasterVolumeSlider,MasterVolumeValue,MusicVolumeLabel,MusicVolumeSlider,MusicVolumeValue,SfxVolumeLabel,SfxVolumeSlider,SfxVolumeValue,LanguageSelect" },
+      { "expect": "window.__egon.state().settingsColumnRect", "equals": "232,37,176x286" },
+      { "expect": "window.__egon.state().musicVolumeLabelText", "equals": "Music volume" },
+      { "expect": "window.__egon.state().sfxVolumeLabelText", "equals": "Sound effects volume" },
+      { "expect": "window.__egon.state().musicVolumeValueText", "equals": "25%" },
+      { "expect": "window.__egon.state().sfxVolumeValueText", "equals": "50%" },
+      { "expect": "window.__egon.state().musicBusVolume", "equals": 25 },
+      { "expect": "window.__egon.state().sfxBusVolume", "equals": 50 },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 25 },
+      { "screenshot": "settings-music-and-sfx-volume" }
+    ]
+  },
+  {
+    "name": "Focus walks master, music, then sound effects, and each slider moves only its own bus and is written at once",
+    "scenario": "no_settings",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "press": "ArrowDown" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
+      { "press": "ArrowDown" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "MusicVolumeSlider" },
+      { "press": "ArrowLeft" },
+      { "expect": "window.__egon.state().musicVolumeValueText", "equals": "24%" },
+      { "expect": "window.__egon.state().musicBusVolume", "equals": 24 },
+      { "expect": "window.__egon.state().savedMusicVolume", "equals": 24 },
+      { "expect": "window.__egon.state().sfxBusVolume", "equals": 50 },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 25 },
+      { "press": "ArrowDown" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "SfxVolumeSlider" },
+      { "press": "ArrowLeft" },
+      { "expect": "window.__egon.state().sfxVolumeValueText", "equals": "49%" },
+      { "expect": "window.__egon.state().sfxBusVolume", "equals": 49 },
+      { "expect": "window.__egon.state().savedSfxVolume", "equals": 49 },
+      { "expect": "window.__egon.state().musicBusVolume", "equals": 24 },
+      { "press": "ArrowDown" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "LanguageSelect" }
+    ]
+  },
+  {
+    "name": "Saved music and sound effects volumes are in effect when the settings screen opens, captioned in the saved language, and a click on the music track sets music alone",
+    "scenario": "saved_settings",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "await": "window.__egon.state().savedMusicVolume", "equals": 60 },
+      { "expect": "window.__egon.state().musicBusVolume", "equals": 60 },
+      { "expect": "window.__egon.state().musicVolumeValueText", "equals": "60%" },
+      { "expect": "window.__egon.state().savedSfxVolume", "equals": 80 },
+      { "expect": "window.__egon.state().sfxBusVolume", "equals": 80 },
+      { "expect": "window.__egon.state().sfxVolumeValueText", "equals": "80%" },
+      { "expect": "window.__egon.state().musicVolumeLabelText", "equals": "Musiklautstärke" },
+      { "expect": "window.__egon.state().sfxVolumeLabelText", "equals": "Effektlautstärke" },
+      { "screenshot": "settings-volumes-from-file" },
+      { "click": [302, 105] },
+      { "expect": "window.__egon.state().musicVolumeSliderValue", "equals": 50 },
+      { "expect": "window.__egon.state().savedMusicVolume", "equals": 50 },
+      { "expect": "window.__egon.state().musicBusVolume", "equals": 50 },
+      { "expect": "window.__egon.state().masterBusVolume", "equals": 40 },
+      { "expect": "window.__egon.state().sfxBusVolume", "equals": 80 }
+    ]
+  }
+]

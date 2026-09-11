@@ -8,12 +8,12 @@
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
       { "await": "window.__egon.state().hoverEnterCount", "equals": 0 },
-      { "move": [48, 344] },
-      { "expect": "window.__egon.state().hoveredApp", "equals": "steam" },
+      { "move": [80, 344] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "chrome" },
       { "expect": "window.__egon.state().hoverEnterCount", "at_least": 1 },
       { "expect": "window.__egon.state().hoveredIconColumn", "equals": 2 },
-      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
-      { "screenshot": "hover-unselected-steam" }
+      { "expect": "window.__egon.state().selectedApp", "equals": "steam" },
+      { "screenshot": "hover-unselected-chrome" }
     ]
   },
   {
@@ -24,12 +24,12 @@
       { "await": "window.__egon.state().screen", "equals": "mainMenu" },
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
-      { "await": "window.__egon.state().selectedApp", "equals": "home" },
-      { "move": [16, 344] },
-      { "expect": "window.__egon.state().hoveredApp", "equals": "home" },
+      { "await": "window.__egon.state().selectedApp", "equals": "steam" },
+      { "move": [48, 344] },
+      { "expect": "window.__egon.state().hoveredApp", "equals": "steam" },
       { "expect": "window.__egon.state().hoveredIconColumn", "equals": 3 },
       { "expect": "window.__egon.state().selectedIconCount", "equals": 1 },
-      { "screenshot": "hover-selected-home" }
+      { "screenshot": "hover-selected-steam" }
     ]
   },
   {

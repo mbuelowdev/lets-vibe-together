@@ -44,7 +44,7 @@
     ]
   },
   {
-    "name": "Start opens the desktop with home selected",
+    "name": "Start opens the desktop with Steam selected",
     "scenario": "no_save",
     "proof": "screenshot",
     "steps": [
@@ -52,7 +52,7 @@
       { "click": [320, 185] },
       { "await": "window.__egon.state().screen", "equals": "game" },
       { "expect": "window.__egon.state().taskbarVisible", "equals": true },
-      { "expect": "window.__egon.state().selectedApp", "equals": "home" },
+      { "expect": "window.__egon.state().selectedApp", "equals": "steam" },
       { "screenshot": "main-menu-start-opens-game" }
     ]
   },

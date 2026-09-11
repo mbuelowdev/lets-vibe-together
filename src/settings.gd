@@ -40,15 +40,29 @@ const PATH := "user://settings.cfg"
 const SECTION := "video"
 const AUDIO_SECTION := "audio"
 
-## Bus 0 is always the master bus: the engine will not remove it or move another in front.
-const MASTER_BUS := 0
+## The volume sliders, in the order the settings screen stacks them. Each one sets the level of
+## one bus in res://resources/default_bus_layout.tres. Music and SFX both send into Master, so the
+## master slider scales everything the game plays: what reaches the speakers is master times the
+## channel's own level, and master at 0 silences both.
+##
+## SFX has its bus and its slider before the game has a single sound effect. One only has to play
+## on the SFX bus to follow both sliders; nothing here needs to know about it.
+enum Volume { MASTER, MUSIC, SFX }
 
-## Whole percent, which is what the slider shows. The engine boots the master bus at 100, but
-## a first run (and a file with no [audio] section) uses MASTER_VOLUME_DEFAULT, so unlike the
-## video values a missing preference still has to be applied. 0 is a real choice - muted -
-## not "unset".
-const MASTER_VOLUME_MAX := 100
-const MASTER_VOLUME_DEFAULT := 25
+## The bus each Volume sets, by its name in the bus layout. Master is always bus 0: the engine
+## will not remove it or move another in front. music.gd puts its player on Music by the same
+## name.
+const VOLUME_BUSES: PackedStringArray = ["Master", "Music", "SFX"]
+
+## Each Volume's key in the file's [audio] section.
+const VOLUME_KEYS: PackedStringArray = ["master_volume", "music_volume", "sfx_volume"]
+
+## Whole percent, which is what the sliders show. The engine boots every bus at 100, but a first
+## run (and a file with no [audio] section) puts master at 25, music at 25 and sound effects at
+## 50, so unlike the video values a missing preference still has to be applied. 0 is a real
+## choice - muted - not "unset".
+const VOLUME_MAX := 100
+const VOLUME_DEFAULTS: PackedInt32Array = [25, 25, 50]
 
 ## Offered languages as [locale, name written in that language], ordered by player share.
 ## The locale drives TranslationServer; its language subtag doubles as the text server tag
@@ -113,8 +127,8 @@ var _resolution_scale := 0
 ## keys are ours and stable, the enum belongs to the engine. "" means unset.
 var _window_mode_key := ""
 
-## 0 to MASTER_VOLUME_MAX. 0 is a real choice - muted - not "unset".
-var _master_volume := MASTER_VOLUME_DEFAULT
+## One whole percent per Volume, 0 to VOLUME_MAX. 0 is a real choice - muted - not "unset".
+var _volumes: PackedInt32Array = VOLUME_DEFAULTS.duplicate()
 
 
 func _init() -> void:
@@ -161,15 +175,17 @@ func load_settings() -> void:
 	var error := config.load(PATH)
 	if error != OK:
 		# No file on a first run, or one that will not parse. Either way the defaults stand,
-		# and the next setter call overwrites the bad file. Volume is the one default that
-		# is not the engine's boot state, so it still has to be applied.
-		_apply_master_volume(_master_volume)
+		# and the next setter call overwrites the bad file. Master's default is not the
+		# engine's boot state, so the volumes still have to be applied.
+		_apply_volumes()
 		return
 	_locale = String(config.get_value(SECTION, "locale", ""))
 	_resolution_scale = int(config.get_value(SECTION, "resolution_scale", 0))
 	_window_mode_key = String(config.get_value(SECTION, "window_mode", ""))
-	# A file from before the slider existed has no [audio] section and boots at the default.
-	_master_volume = _clamp_master_volume(config.get_value(AUDIO_SECTION, "master_volume", MASTER_VOLUME_DEFAULT))
+	# A file from before a slider existed has no key for it - and one from before the first, no
+	# [audio] section at all - and boots that volume at its default.
+	for channel in VOLUME_KEYS.size():
+		_volumes[channel] = _clamp_volume(config.get_value(AUDIO_SECTION, VOLUME_KEYS[channel], VOLUME_DEFAULTS[channel]))
 	_apply_saved()
 	loaded.emit()
 
@@ -194,7 +210,7 @@ func _apply_saved() -> void:
 	if mode_index >= 0:
 		_apply_window_mode(mode_index)
 	_apply_resolution_scale(_resolution_scale)
-	_apply_master_volume(_master_volume)
+	_apply_volumes()
 
 
 func _is_offered_locale(value: String) -> bool:
@@ -209,7 +225,8 @@ func save_settings() -> void:
 	config.set_value(SECTION, "locale", _locale)
 	config.set_value(SECTION, "resolution_scale", _resolution_scale)
 	config.set_value(SECTION, "window_mode", _window_mode_key)
-	config.set_value(AUDIO_SECTION, "master_volume", _master_volume)
+	for channel in VOLUME_KEYS.size():
+		config.set_value(AUDIO_SECTION, VOLUME_KEYS[channel], _volumes[channel])
 	var error := config.save(PATH)
 	if error != OK:
 		# A read-only or full user:// is the player's problem to fix, not a reason to take
@@ -220,15 +237,15 @@ func save_settings() -> void:
 ## Forget every preference and remove the file. For the egon scenario that has to undo what
 ## an earlier check persisted - user:// is per-origin and outlives a page load.
 ##
-## The locale and the master volume go back to where a first run has them too, because
+## The locale and the volumes go back to where a first run has them too, because
 ## load_settings() already applied whatever the old file said. The window is left where it is.
 func clear() -> void:
 	_locale = ""
 	_resolution_scale = 0
 	_window_mode_key = ""
-	_master_volume = MASTER_VOLUME_DEFAULT
+	_volumes = VOLUME_DEFAULTS.duplicate()
 	TranslationServer.set_locale(OS.get_locale())
-	_apply_master_volume(_master_volume)
+	_apply_volumes()
 	if FileAccess.file_exists(PATH):
 		DirAccess.remove_absolute(PATH)
 	loaded.emit()
@@ -298,34 +315,48 @@ func set_window_mode_key(value: String) -> void:
 	save_settings()
 
 
-func master_volume() -> int:
-	return _master_volume
+## `channel` is a Volume.
+func volume(channel: int) -> int:
+	return _volumes[channel]
 
 
-## Heard at once and written at once, like every other setter, so the slider is live while it
-## is being dragged and the last position survives a closed tab.
-func set_master_volume(value: int) -> void:
-	value = _clamp_master_volume(value)
-	_apply_master_volume(value)
-	if value == _master_volume:
+## Heard at once and written at once, like every other setter, so a slider is live while it is
+## being dragged and the last position survives a closed tab.
+func set_volume(channel: int, value: int) -> void:
+	value = _clamp_volume(value)
+	_apply_volume(channel, value)
+	if value == _volumes[channel]:
 		return
-	_master_volume = value
+	_volumes[channel] = value
 	save_settings()
 
 
-## What the master bus is actually playing at, in the same whole percent, so a check can prove
-## the slider reached the engine and not only the file.
-func master_bus_volume() -> int:
-	return roundi(AudioServer.get_bus_volume_linear(MASTER_BUS) * MASTER_VOLUME_MAX)
+## What the channel's bus is actually playing at, in the same whole percent, so a check can prove
+## a slider reached the engine and not only the file. The bus's own level: master is not
+## multiplied in. -1 when the bus layout has no such bus.
+func bus_volume(channel: int) -> int:
+	var bus := AudioServer.get_bus_index(VOLUME_BUSES[channel])
+	if bus == -1:
+		return -1
+	return roundi(AudioServer.get_bus_volume_linear(bus) * VOLUME_MAX)
 
 
-func _clamp_master_volume(value: Variant) -> int:
-	return clampi(int(value), 0, MASTER_VOLUME_MAX)
+func _clamp_volume(value: Variant) -> int:
+	return clampi(int(value), 0, VOLUME_MAX)
 
 
-## 0 is -inf dB, which the bus plays as silence.
-func _apply_master_volume(percent: int) -> void:
-	AudioServer.set_bus_volume_linear(MASTER_BUS, float(percent) / MASTER_VOLUME_MAX)
+func _apply_volumes() -> void:
+	for channel in _volumes.size():
+		_apply_volume(channel, _volumes[channel])
+
+
+## 0 is -inf dB, which the bus plays as silence. A bus missing from the layout is skipped rather
+## than an error: the value is still stored, and lands once the bus is back.
+func _apply_volume(channel: int, percent: int) -> void:
+	var bus := AudioServer.get_bus_index(VOLUME_BUSES[channel])
+	if bus == -1:
+		return
+	AudioServer.set_bus_volume_linear(bus, float(percent) / VOLUME_MAX)
 
 
 ## A fullscreen window owns its own size, so a scale picked there is only recorded; it takes

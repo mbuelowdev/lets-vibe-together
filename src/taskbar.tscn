@@ -7,12 +7,12 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_home"]
 atlas = ExtResource("3_icons")
-region = Rect2(32, 0, 32, 32)
+region = Rect2(0, 0, 32, 32)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_steam"]
 atlas = ExtResource("3_icons")
-region = Rect2(0, 32, 32, 32)
+region = Rect2(32, 32, 32, 32)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chrome"]

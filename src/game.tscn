@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bengjj27rnu2g" path="res://src/game.gd" id="1_game"]
 [ext_resource type="PackedScene" path="res://src/taskbar.tscn" id="2_taskbar"]
-[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="3_h2yge"]
+[ext_resource type="PackedScene" path="res://src/cs2_screen.tscn" id="3_cs2"]
+[ext_resource type="PackedScene" path="res://src/pause_menu.tscn" id="4_pause"]
 
 [node name="Game" type="Node2D" unique_id=1797970087]
 script = ExtResource("1_game")
@@ -26,7 +27,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.18039216, 0.25882354, 0.44705883, 1)
+color = Color(0.105882354, 0.15686275, 0.21960784, 1)
 
 [node name="Screen" type="TextureRect" parent="UI/Root" unique_id=1855182333]
 visible = false
@@ -41,22 +42,15 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 2
 
+[node name="Cs2Screen" parent="UI/Root" instance=ExtResource("3_cs2")]
+visible = false
+layout_mode = 1
+
 [node name="Taskbar" parent="UI/Root" unique_id=696222013 instance=ExtResource("2_taskbar")]
 layout_mode = 1
 
-[node name="SaveQuitButton" type="Button" parent="UI/Root" unique_id=1695843779]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -88.0
-offset_top = 28.0
-offset_right = 88.0
-offset_bottom = 52.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("3_h2yge")
-theme_override_font_sizes/font_size = 12
-text = "Save & Quit"
+[node name="PauseLayer" type="CanvasLayer" parent="." unique_id=1167045392]
+layer = 2
+
+[node name="PauseMenu" parent="PauseLayer" unique_id=1587720043 instance=ExtResource("4_pause")]
+visible = false

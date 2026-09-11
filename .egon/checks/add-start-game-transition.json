@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Start fades through a loading hold before the desktop",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().transitionPhase", "equals": "idle" },
+      { "expect": "window.__egon.state().loadingVisible", "equals": false },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().loadingVisible", "equals": true },
+      { "expect": "window.__egon.state().transitionPhase", "equals": "loading" },
+      { "expect": "window.__egon.state().loadingText", "contains": "Loading" },
+      { "expect": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "screenshot": "start-game-loading" },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "await": "window.__egon.state().transitionPhase", "equals": "idle" },
+      { "expect": "window.__egon.state().loadingVisible", "equals": false },
+      { "expect": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().musicTrack", "equals": "res://assets/audio/game-music-1.mp3" }
+    ]
+  }
+]

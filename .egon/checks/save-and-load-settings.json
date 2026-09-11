@@ -46,6 +46,8 @@
       { "press": "Space" },
       { "expect": "window.__egon.state().focusedControl", "equals": "MasterVolumeSlider" },
       { "press": "Down" },
+      { "press": "Down" },
+      { "press": "Down" },
       { "expect": "window.__egon.state().focusedControl", "equals": "LanguageSelect" },
       { "press": "Space" },
       { "press": "Down" },

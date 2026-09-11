@@ -2,7 +2,16 @@ extends Control
 
 signal app_selected(app_id: String)
 
+## The Home icon was pressed. Home is not an app: game.gd opens the pause menu for it, and the
+## selection stays where it was.
+signal home_pressed
+
+## One per icon, in taskbar order, which is also the icon sheet's row order. The first is Home,
+## which keeps its icon and its hover art but is never the selected one.
 const APP_IDS: PackedStringArray = ["home", "steam", "chrome", "cs2"]
+const HOME_INDEX := 0
+## Where the desktop opens: the first icon after Home.
+const FIRST_APP_INDEX := 1
 const ICON_SHEET_PATH := "res://assets/images/taskbar-app-icons.png"
 const ICON_SHEET_COLUMNS := 4
 const COL_UNSELECTED := 0
@@ -17,7 +26,7 @@ const UTIL_COL_VOLUME := 2
 const CLOCK_FORMAT := "%02d:%02d"
 const CLOCK_TICK_SECONDS := 1.0
 
-var _selected_index: int = 0
+var _selected_index: int = FIRST_APP_INDEX
 var _hovered_index: int = -1
 var _focused_index: int = -1
 var _hover_enter_count: int = 0
@@ -96,12 +105,8 @@ func _process(delta: float) -> void:
 	_update_clock()
 
 
-## Focus wiring lives in game.gd, which owns both branches of the UI; the taskbar only hands out
-## its buttons and reports which one the caret is on.
-func app_button_count() -> int:
-	return _buttons.size()
-
-
+## The icons ring left and right on their own - taskbar.tscn wires the neighbours - so game.gd only
+## asks for the lit one, to land the first key press on it.
 func app_button(index: int) -> TextureButton:
 	if index < 0 or index >= _buttons.size():
 		return null
@@ -118,8 +123,9 @@ func focused_app_id() -> String:
 	return APP_IDS[_focused_index]
 
 
+## Never Home: the clamp starts after it.
 func select_app(index: int) -> void:
-	var clamped := clampi(index, 0, APP_IDS.size() - 1)
+	var clamped := clampi(index, FIRST_APP_INDEX, APP_IDS.size() - 1)
 	if clamped == _selected_index:
 		return
 	_selected_index = clamped
@@ -266,6 +272,9 @@ func utils_right_margin() -> int:
 
 
 func _on_app_pressed(index: int) -> void:
+	if index == HOME_INDEX:
+		home_pressed.emit()
+		return
 	select_app(index)
 
 

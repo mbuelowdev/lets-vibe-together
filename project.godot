@@ -25,6 +25,7 @@ Settings="*res://src/settings.gd"
 GameState="*res://src/game_state.gd"
 Music="*res://src/music.gd"
 EgonBridge="*res://.egon/egon_bridge.gd"
+SceneTransition="*res://src/scene_transition.tscn"
 
 [display]
 
