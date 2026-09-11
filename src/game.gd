@@ -31,6 +31,46 @@ const FOCUS_ENTRY_ACTIONS: PackedStringArray = [
 	"ui_focus_prev",
 ]
 
+## Everything _register_bridge_fields() adds, so _exit_tree() can take it all back off again
+## without the two lists drifting apart.
+const BRIDGE_FIELDS: PackedStringArray = [
+	"screen",
+	"selectedApp",
+	"selectedAppIndex",
+	"appSwitchCount",
+	"backgroundColor",
+	"appIconCount",
+	"selectedIconCount",
+	"taskbarVisible",
+	"hoveredApp",
+	"hoverEnterCount",
+	"hoveredIconColumn",
+	"rubles",
+	"savedRubles",
+	"savePending",
+	"saveFileExists",
+	"autosaveEnabled",
+	"moneyText",
+	"moneyMatchesState",
+	"moneySignDrop",
+	"clockText",
+	"clockMatchesSystemTime",
+	"volumeIconColumn",
+	"taskbarUtilsVisible",
+	"taskbarUtilsClickable",
+	"taskbarUtilsOrder",
+	"taskbarUtilsRightMargin",
+	"screenVisible",
+	"screenTexture",
+	"screenTextureSize",
+	"taskbarAboveScreen",
+	"locale",
+	"focusedControl",
+	"focusedApp",
+	"musicTrack",
+	"musicMuffled",
+]
+
 var _app_switch_count: int = 0
 var _background: ColorRect
 var _screen: TextureRect
@@ -279,3 +319,16 @@ func _focused_control_name() -> String:
 
 func _color_to_hex(color: Color) -> String:
 	return "#%s" % color.to_html(false).to_lower()
+
+
+## Providers close over nodes this scene is about to free, and Save & Quit takes the player
+## off the desktop, so anything left registered would hand every check that runs afterwards a
+## taskbar that is not there. `screen` and `focusedControl` are registered by main_menu.gd too:
+## SceneTree tears the old scene down and readies the new one inside a single deferred call, so
+## the menu re-registers both before the bridge next pushes a snapshot.
+func _exit_tree() -> void:
+	var bridge := get_node_or_null("/root/EgonBridge")
+	if bridge == null:
+		return
+	for field in BRIDGE_FIELDS:
+		bridge.unregister_field(field)

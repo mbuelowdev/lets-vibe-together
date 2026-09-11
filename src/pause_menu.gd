@@ -23,9 +23,9 @@ extends Control
 ## Music for the low-pass sweep and _close() takes it off again. The settings screen opened in
 ## between leaves the music alone, so it stays muffled there.
 ##
-## Save & Quit writes both halves its label promises and quits - see _on_save_quit_pressed(). It
-## is the button Home's screen used to carry; Home has no screen any more, and its taskbar icon
-## opens this menu instead.
+## Save & Quit writes both halves its label promises and returns to the main menu - see
+## _on_save_quit_pressed(). It is the button Home's screen used to carry; Home has no screen any
+## more, and its taskbar icon opens this menu instead.
 ##
 ## Settings is the front end's settings screen, instanced over this menu rather than switched to:
 ## a scene change would free the desktop, and the player would come back to it with whatever app
@@ -39,6 +39,7 @@ extends Control
 signal settings_closed
 
 const SETTINGS_SCENE := "res://src/settings_screen.tscn"
+const MAIN_MENU_SCENE := "res://src/main_menu.tscn"
 
 const CONTINUE_KEY := "PAUSE_CONTINUE"
 ## The main menu's key: the same word, already in every language.
@@ -234,14 +235,23 @@ func _set_column_visible(shown: bool) -> void:
 ## and data loss - settings write as they change, progress autosaves on an interval - because
 ## closing a browser tab never reaches this handler. Saving here is what makes the button honest
 ## for the player who does use it.
-## On the web export quit stops the main loop rather than closing the tab.
+##
+## The exit is the main menu, not off the process: that is where the player came from. Instant,
+## the way Settings' Back is - Start's fade is the beat into the desktop, not out of it.
+## The tree is unpaused first; change_scene_to_file() would otherwise leave it paused and the
+## menu would come up frozen. _exit_tree() would catch that too, but not until the old scene
+## is already on its way out.
 func _on_save_quit_pressed() -> void:
 	if _settings != null:
 		_settings.save_settings()
 	var state := get_node_or_null("/root/GameState")
 	if state != null:
 		state.save_game()
-	get_tree().quit()
+	get_tree().paused = false
+	_muffle_music(false)
+	var error := get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	if error != OK:
+		push_error("pause_menu: could not open %s (error %d)" % [MAIN_MENU_SCENE, error])
 
 
 func _register_bridge_fields() -> void:
@@ -257,8 +267,8 @@ func _register_bridge_fields() -> void:
 	bridge.register_field("pauseMenuScrimRect", func() -> String: return _scrim_rect())
 
 
-## Nothing takes the desktop away while it is paused yet, but whatever does - a quit to the main
-## menu - must not leave the tree paused behind it, or the next screen comes up frozen.
+## Save & Quit takes this node out of the tree. The handler already unpaused; clearing the
+## flag here is the last line of defence so the menu does not come up frozen if it forgot to.
 func _exit_tree() -> void:
 	if visible:
 		get_tree().paused = false

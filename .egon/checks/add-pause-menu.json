@@ -140,5 +140,29 @@
       { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
       { "expect": "window.__egon.state().screenTexture", "equals": "res://assets/images/screen-base-cs2.png" }
     ]
+  },
+  {
+    "name": "Save & Quit writes the save and returns to the main menu at once, with no loading fade and the tree running",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuStartIsContinue", "equals": false },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "press": "Escape" },
+      { "await": "window.__egon.state().paused", "equals": true },
+      { "click": [320, 222] },
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "expect": "window.__egon.state().mainMenuVisible", "equals": true },
+      { "expect": "window.__egon.state().mainMenuStartIsContinue", "equals": true },
+      { "expect": "window.__egon.state().transitionPhase", "equals": "idle" },
+      { "expect": "window.__egon.state().loadingVisible", "equals": false },
+      { "expect": "window.__egon.state().pauseMenuVisible === undefined", "equals": true },
+      { "expect": "window.__egon.state().selectedApp === undefined", "equals": true },
+      { "press": "ArrowDown" },
+      { "expect": "window.__egon.state().focusedControl", "equals": "StartButton" },
+      { "screenshot": "pause-menu-save-quit-to-main-menu" }
+    ]
   }
 ]
