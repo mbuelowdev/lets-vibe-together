@@ -60,6 +60,12 @@ const MUFFLE_SECONDS := 1.0
 ## than the Music bus, so it does not fight the player's Music volume slider.
 const MUFFLE_VOLUME := 0.75
 
+## How long the track takes to fall to silence for a story segment, or to come back after one.
+## Shorter than MUFFLE_SECONDS: the muffle is a room going quiet behind a menu and can take its
+## time, while this is the game getting out of the way of someone speaking. Turning back part way
+## through takes the matching share of this, as the muffle does.
+const SILENCE_SECONDS := 0.6
+
 ## The clear end of the sweep: above anything in the track, so the filter can come in and drop out
 ## at this end without a step anyone hears.
 const OPEN_CUTOFF_HZ := 20000.0
@@ -78,7 +84,15 @@ var _muffled_cutoff_hz := 0.0
 ## Where the sweep is: 0 is clear, 1 is the layout's cutoff.
 var _muffle := 0.0
 
+var _silenced := false
+
+## Where the silence fade is: 0 is the full level, 1 is inaudible. Multiplied into the level
+## alongside the muffle rather than replacing it, so the two can be in any combination without
+## either having to know about the other - see _clear_volume().
+var _silence := 0.0
+
 var _sweep: Tween
+var _silence_fade: Tween
 var _fade: Tween
 
 
@@ -140,8 +154,16 @@ func stop() -> void:
 	if _player.playing:
 		_player.stop()
 	_muffled = false
+	_silenced = false
+	# Both factors back to none, so the next play() aims at the full level. _set_muffle(0.0) just
+	# below re-clears the first of them where there is a filter to sweep; where there is not,
+	# nothing else would.
+	_muffle = 0.0
+	_silence = 0.0
 	if _sweep != null:
 		_sweep.kill()
+	if _silence_fade != null:
+		_silence_fade.kill()
 	var idx := _music_bus()
 	if _filter != null:
 		_set_muffle(0.0)
@@ -169,7 +191,8 @@ func set_muffled(muffled: bool) -> void:
 		return
 	if _filter == null:
 		AudioServer.set_bus_effect_enabled(idx, 0, muffled)
-		_player.volume_linear = TRACK_VOLUME * (MUFFLE_VOLUME if muffled else 1.0)
+		_muffle = 1.0 if muffled else 0.0
+		_player.volume_linear = _clear_volume()
 		return
 	if _sweep != null:
 		_sweep.kill()
@@ -180,6 +203,39 @@ func set_muffled(muffled: bool) -> void:
 	_sweep.tween_method(_set_muffle, _muffle, target, MUFFLE_SECONDS * absf(target - _muffle))
 	if not muffled:
 		_sweep.tween_callback(AudioServer.set_bus_effect_enabled.bind(idx, 0, false))
+
+
+## Fade the track out to nothing, or bring it back. For story dialog: the boxes are read in
+## silence, and text is the only voice this game has, so the song gets out of the way rather than
+## being muffled behind it the way the pause menu muffles it.
+##
+## The level, not the player: stopping and playing again would start the track from its beginning
+## after every segment, and fade_out() stops. So playback runs on inaudibly underneath and comes
+## back where it got to.
+##
+## Idempotent, like set_muffled(), so story.gd can declare the state it wants on every segment
+## start without two segments back to back bouncing the music in the gap between them. Turning
+## round mid-fade starts from wherever the level is now.
+func set_silenced(silenced: bool) -> void:
+	if _silenced == silenced:
+		return
+	_silenced = silenced
+	# play()'s fade-in aims at the level as it was when it started, so left running it would pull
+	# against this one. Killed rather than waited for: this fade is aimed at the same place and
+	# takes it the rest of the way.
+	_kill_fade()
+	if _silence_fade != null:
+		_silence_fade.kill()
+	var target := 1.0 if silenced else 0.0
+	_silence_fade = create_tween()
+	_silence_fade.tween_method(
+		_set_silence, _silence, target, SILENCE_SECONDS * absf(target - _silence)
+	)
+
+
+## The state the caller asked for, not where the fade has got to.
+func is_silenced() -> bool:
+	return _silenced
 
 
 ## The resource path of the track playing, or "" when nothing is, so the desktop's bridge fields
@@ -195,12 +251,14 @@ func is_muffled() -> bool:
 	return _muffled
 
 
-## TRACK_VOLUME with the current muffle applied, which is TRACK_VOLUME itself while the filter
-## is open. play()'s fade-in aims here rather than at the constant, so a track that starts
-## muffled (it should not, but the two tweens then stay one level) does not pop up and get
+## TRACK_VOLUME with the current muffle and silence applied, which is TRACK_VOLUME itself while
+## the filter is open and nothing is silencing it. The one place the player's level is worked out,
+## so the muffle sweep, the silence fade and play()'s fade-in cannot disagree about it: each moves
+## its own factor and then asks for the answer. play()'s fade-in aims here rather than at the
+## constant, so a track starting under a muffle or a story segment does not pop up to full and get
 ## pulled back down.
 func _clear_volume() -> float:
-	return TRACK_VOLUME * lerpf(1.0, MUFFLE_VOLUME, _muffle)
+	return TRACK_VOLUME * lerpf(1.0, MUFFLE_VOLUME, _muffle) * (1.0 - _silence)
 
 
 func _kill_fade() -> void:
@@ -217,7 +275,15 @@ func _kill_fade() -> void:
 func _set_muffle(amount: float) -> void:
 	_muffle = amount
 	_filter.cutoff_hz = OPEN_CUTOFF_HZ * pow(_muffled_cutoff_hz / OPEN_CUTOFF_HZ, amount)
-	_player.volume_linear = TRACK_VOLUME * lerpf(1.0, MUFFLE_VOLUME, amount)
+	_player.volume_linear = _clear_volume()
+
+
+## Put the level `amount` of the way from where the muffle has it to inaudible. Linear in
+## amplitude, like the muffle's own drop: over six tenths of a second there is nothing to be
+## gained from sweeping it in decibels, and 1.0 has to land on exactly silent.
+func _set_silence(amount: float) -> void:
+	_silence = amount
+	_player.volume_linear = _clear_volume()
 
 
 ## The Music bus's index, or -1 when the bus or its first effect is missing.

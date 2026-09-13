@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gaming_community_target_card.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_idle"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hover"]
+bg_color = Color(0.22352941, 0.2509804, 0.26666668, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pressed"]
+bg_color = Color(0.2901961, 0.3254902, 0.34509805, 1)
+
+[node name="TargetCard" type="Button"]
+offset_right = 178.0
+offset_bottom = 18.0
+focus_mode = 0
+theme = ExtResource("2_theme")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_idle")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_idle")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_pressed")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_idle")
+script = ExtResource("1_script")
+
+[node name="Avatar" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 4.0
+offset_right = 20.0
+offset_bottom = 14.0
+mouse_filter = 2
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_right = 175.0
+offset_bottom = 18.0
+mouse_filter = 2
+auto_translate_mode = 2
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_font_sizes/font_size = 12
+vertical_alignment = 1
+clip_text = true

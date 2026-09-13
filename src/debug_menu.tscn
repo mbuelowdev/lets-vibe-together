@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/debug_menu.gd" id="1_debug"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://c3b6e3eruvohi" path="res://src/marquee_button.gd" id="3_marquee"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.10588235, 0.15686275, 0.21960784, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18039216, 0.25882353, 0.44705883, 1)
+
+[node name="DebugMenu" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_debug")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -166.0
+offset_right = -4.0
+offset_bottom = -36.0
+grow_horizontal = 0
+grow_vertical = 0
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Grants" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -56.0
+offset_top = 8.0
+offset_right = 56.0
+offset_bottom = 122.0
+grow_horizontal = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="GiveMoneyButton" type="Button" parent="Panel/Grants"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Give money"
+script = ExtResource("3_marquee")
+
+[node name="GiveTargetsButton" type="Button" parent="Panel/Grants"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Give targets"
+script = ExtResource("3_marquee")
+
+[node name="GiveSkinsButton" type="Button" parent="Panel/Grants"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Give skins"
+script = ExtResource("3_marquee")

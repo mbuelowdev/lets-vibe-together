@@ -1,0 +1,60 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gaming_community_screen.gd" id="1_gaming_community"]
+[ext_resource type="Texture2D" uid="uid://cgr7kercs3o4d" path="res://assets/images/gamer-community-feed.png" id="4_feed"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="2_theme"]
+
+[node name="GamingCommunityScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_gaming_community")
+
+[node name="FeedClip" type="Control" parent="."]
+clip_contents = true
+layout_mode = 1
+offset_left = 210.0
+offset_top = 37.0
+offset_right = 610.0
+offset_bottom = 328.0
+
+[node name="Feed" type="TextureRect" parent="FeedClip"]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 400.0
+offset_bottom = 1023.0
+mouse_filter = 2
+texture = ExtResource("4_feed")
+
+[node name="RecentlyPlayedWithLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 44.0
+offset_right = 178.0
+offset_bottom = 60.0
+auto_translate_mode = 2
+theme = ExtResource("2_theme")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "Recently played with"
+
+[node name="TargetList" type="Control" parent="."]
+layout_mode = 1
+offset_left = 0.0
+offset_top = 68.0
+offset_right = 178.0
+offset_bottom = 324.0
+mouse_filter = 2
+
+[node name="ChatWindows" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

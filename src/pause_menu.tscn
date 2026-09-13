@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://src/pause_menu.gd" id="1_pause"]
 [ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://c3b6e3eruvohi" path="res://src/marquee_button.gd" id="3_marquee"]
 
 [node name="PauseMenu" type="Control" unique_id=1402957731]
 process_mode = 3
@@ -39,6 +40,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 theme_override_font_sizes/font_size = 12
 text = "Continue"
+script = ExtResource("3_marquee")
 
 [node name="SettingsButton" type="Button" parent="." unique_id=519837260]
 layout_mode = 1
@@ -56,6 +58,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 theme_override_font_sizes/font_size = 12
 text = "Settings"
+script = ExtResource("3_marquee")
 
 [node name="SaveQuitButton" type="Button" parent="." unique_id=2046731958]
 layout_mode = 1
@@ -73,3 +76,4 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 theme_override_font_sizes/font_size = 12
 text = "Save & Quit"
+script = ExtResource("3_marquee")

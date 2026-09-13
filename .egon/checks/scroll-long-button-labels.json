@@ -1,0 +1,29 @@
+[
+  {
+    "name": "In French, Delete local save keeps to the settings column and scrolls its label instead of growing past it",
+    "scenario": "french",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "await": "window.__egon.state().locale", "equals": "fr" },
+      { "expect": "window.__egon.state().settingsColumnRect", "equals": "232,37,176x286" },
+      { "await": "window.__egon.state().deleteSaveLabelScroll", "at_least": 1 },
+      { "screenshot": "delete-save-label-scrolled" }
+    ]
+  },
+  {
+    "name": "A label that fits stays put: in English, Delete local save does not scroll",
+    "scenario": "default",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 227] },
+      { "await": "window.__egon.state().screen", "equals": "settings" },
+      { "expect": "window.__egon.state().settingsColumnRect", "equals": "232,37,176x286" },
+      { "expect": "window.__egon.state().deleteSaveLabelScroll", "equals": 0 },
+      { "screenshot": "delete-save-label-still" }
+    ]
+  }
+]

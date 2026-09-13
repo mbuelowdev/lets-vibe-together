@@ -1,12 +1,13 @@
 extends Control
 ## The CS2 app, over its backdrop: a Queue for match button in the middle of the canvas, and once
-## that is pressed, a match that plays itself out as a run of full-canvas stages.
+## that is pressed, a match that plays itself out as a run of full-canvas stages. A match that
+## plays out to the end pays out targets; see TARGET_CHANCES.
 ##
 ## Every stage is a placeholder for now - a dark canvas with its name across the middle in white -
 ## standing in for the gif it will become.
 ##
 ## game.gd shows this only while CS2 is the selected app, but a hidden Control still processes, so a
-## match carries on while the player is on Steam or Chrome and is wherever it has got to when they
+## match carries on while the player is on Gaming Community or Chrome and is wherever it has got to when they
 ## come back. The pause menu does stop it: this runs on the default process mode, so it waits under
 ## the shade with the taskbar clock and everything else on the desktop.
 
@@ -26,10 +27,21 @@ const STAGES := [
 
 const LAST_STAGE_HOLD := 2.0
 
+## What a finished match pays, as [targets, chance of at least that many]. The first row is
+## certain, so every match pays at least one, and the chances are cumulative: one roll against the
+## table pays exactly 1 target 75% of the time, 2 20%, 3 4% and 4 1%.
+const TARGET_CHANCES := [
+	[1, 1.0],
+	[2, 0.25],
+	[3, 0.05],
+	[4, 0.01],
+]
+
 var _queue_button: Button
 var _stage_panel: ColorRect
 var _stage_label: Label
 var _settings: Node
+var _game_state: Node
 
 ## Index into STAGES of the stage on screen, or -1 while the queue button is up.
 var _stage: int = -1
@@ -41,6 +53,7 @@ func _ready() -> void:
 	_stage_panel = $StagePanel
 	_stage_label = $StagePanel/StageLabel
 	_settings = get_node_or_null("/root/Settings")
+	_game_state = get_node_or_null("/root/GameState")
 	_queue_button.pressed.connect(_on_queue_pressed)
 	if _settings != null:
 		_settings.loaded.connect(_on_settings_loaded)
@@ -79,12 +92,36 @@ func _process(delta: float) -> void:
 	if stage != _stage:
 		_show_stage(stage)
 	if _stage == STAGES.size() - 1 and _elapsed >= float(STAGES[_stage][0]) + LAST_STAGE_HOLD:
-		_return_to_queue()
+		_finish_match()
 
 
 func _show_stage(index: int) -> void:
 	_stage = index
 	_stage_label.text = String(STAGES[index][1])
+
+
+## The last stage has held its time: pay out, then back to the queue button.
+func _finish_match() -> void:
+	if _game_state != null:
+		_game_state.add_targets(targets_for_roll(randf()))
+	_return_to_queue()
+
+
+## The most targets whose chance covers `roll`, for a roll in [0, 1] as randf() draws it - both
+## ends included, which is why the comparison is <= and a roll of exactly 1.0 still pays the
+## certain first row. Takes the roll rather than drawing one, so the table can be checked without
+## playing a match.
+static func targets_for_roll(roll: float) -> int:
+	var targets := 0
+	for row in TARGET_CHANCES:
+		if roll <= float(row[1]):
+			targets = maxi(targets, int(row[0]))
+	return targets
+
+
+## Index into STAGES of the stage on screen, or -1 while the queue button is up.
+func stage() -> int:
+	return _stage
 
 
 ## Same idle as _ready: the backdrop and Queue for match, nothing counting.

@@ -1,0 +1,191 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dhcv8dcvwg8el" path="res://assets/images/gamer-community-chat-window.png" id="1_window"]
+[ext_resource type="Script" path="res://src/gaming_community_chat_window.gd" id="2_script"]
+[ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="3_theme"]
+[ext_resource type="Texture2D" uid="uid://bsbv65xv7h3vb" path="res://assets/images/player_avatar.png" id="4_player_avatar"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trade"]
+bg_color = Color(0.29411766, 0.40784314, 0.1254902, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.64313726, 0.8156863, 0.02745098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trade_hover"]
+bg_color = Color(0.38431373, 0.5294118, 0.16470589, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.7490196, 0.9019608, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_shadow"]
+bg_color = Color(0, 0, 0, 0)
+shadow_color = Color(0, 0, 0, 0.48)
+shadow_size = 6
+anti_aliasing = false
+
+[node name="ChatWindow" type="TextureRect"]
+offset_right = 150.0
+offset_bottom = 150.0
+theme = ExtResource("3_theme")
+texture = ExtResource("1_window")
+script = ExtResource("2_script")
+
+[node name="Shadow" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_shadow")
+
+[node name="TitleAvatar" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 5.0
+offset_right = 17.0
+offset_bottom = 15.0
+mouse_filter = 2
+
+[node name="Log" type="Control" parent="."]
+clip_contents = true
+layout_mode = 0
+offset_left = 6.0
+offset_top = 30.0
+offset_right = 144.0
+offset_bottom = 118.0
+mouse_filter = 2
+
+[node name="PlayerLine" type="Control" parent="Log"]
+layout_mode = 0
+offset_right = 138.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Content" type="Control" parent="Log/PlayerLine"]
+visible = false
+layout_mode = 0
+offset_right = 138.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Avatar" type="TextureRect" parent="Log/PlayerLine/Content"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 11.0
+offset_bottom = 11.0
+mouse_filter = 2
+texture = ExtResource("4_player_avatar")
+
+[node name="Text" type="Label" parent="Log/PlayerLine/Content"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = -2.0
+offset_right = 138.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_constants/line_spacing = -4
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+clip_text = true
+max_lines_visible = 2
+auto_translate_mode = 2
+
+[node name="TargetLine" type="Control" parent="Log"]
+layout_mode = 0
+offset_right = 138.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Content" type="Control" parent="Log/TargetLine"]
+visible = false
+layout_mode = 0
+offset_right = 138.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Avatar" type="TextureRect" parent="Log/TargetLine/Content"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 11.0
+offset_bottom = 11.0
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Log/TargetLine/Content"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = -2.0
+offset_right = 138.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_constants/line_spacing = -4
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+clip_text = true
+max_lines_visible = 2
+auto_translate_mode = 2
+
+[node name="TradeLine" type="Control" parent="Log"]
+layout_mode = 0
+offset_right = 138.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Content" type="Control" parent="Log/TradeLine"]
+visible = false
+layout_mode = 0
+offset_right = 138.0
+offset_bottom = 24.0
+mouse_filter = 2
+
+[node name="Avatar" type="TextureRect" parent="Log/TradeLine/Content"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 11.0
+offset_bottom = 11.0
+mouse_filter = 2
+
+[node name="TradeRequest" type="Button" parent="Log/TradeLine/Content"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = -3.0
+offset_right = 138.0
+offset_bottom = 15.0
+focus_mode = 0
+auto_translate_mode = 2
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_trade")
+theme_override_styles/hover = SubResource("StyleBoxFlat_trade_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_trade_hover")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_trade_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_trade")
+theme_override_styles/focus = SubResource("StyleBoxFlat_trade")
+text = "Trade request"
+
+[node name="ChatBox" type="Control" parent="."]
+clip_contents = true
+layout_mode = 0
+offset_left = 6.0
+offset_top = 126.0
+offset_right = 126.0
+offset_bottom = 141.0
+mouse_filter = 2
+
+[node name="Typed" type="Label" parent="ChatBox"]
+layout_mode = 0
+offset_top = -2.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(0.9137255, 0.9137255, 0.9137255, 1)
+theme_override_font_sizes/font_size = 12
+vertical_alignment = 1
+auto_translate_mode = 2

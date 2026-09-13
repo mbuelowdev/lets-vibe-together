@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c0k4sghcq23qg" path="res://src/settings_screen.gd" id="1_settings"]
 [ext_resource type="Texture2D" uid="uid://b75250mcw3pin" path="res://assets/images/settings-screen.png" id="2_screen"]
 [ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="3_theme"]
+[ext_resource type="Script" uid="uid://c3b6e3eruvohi" path="res://src/marquee_button.gd" id="4_marquee"]
 
 [sub_resource type="Gradient" id="Gradient_scrim"]
 offsets = PackedFloat32Array(0, 0.1, 0.9, 1)
@@ -275,6 +276,7 @@ theme = ExtResource("3_theme")
 theme_type_variation = &"DangerousButton"
 theme_override_font_sizes/font_size = 12
 text = "Delete local save"
+script = ExtResource("4_marquee")
 
 [node name="BackButton" type="Button" parent="." unique_id=1819941045]
 layout_mode = 1
@@ -290,6 +292,7 @@ focus_mode = 1
 theme = ExtResource("3_theme")
 theme_override_font_sizes/font_size = 12
 text = "Back"
+script = ExtResource("4_marquee")
 
 [node name="ConfirmDelete" type="Control" parent="." unique_id=1695843781]
 visible = false
@@ -368,6 +371,7 @@ theme = ExtResource("3_theme")
 theme_type_variation = &"DangerousButton"
 theme_override_font_sizes/font_size = 12
 text = "Yes, delete it!"
+script = ExtResource("4_marquee")
 
 [node name="ConfirmCancelButton" type="Button" parent="ConfirmDelete/Panel" unique_id=1695843787]
 layout_mode = 1
@@ -378,3 +382,4 @@ offset_bottom = 106.0
 theme = ExtResource("3_theme")
 theme_override_font_sizes/font_size = 12
 text = "Cancel"
+script = ExtResource("4_marquee")

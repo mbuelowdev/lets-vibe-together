@@ -133,6 +133,7 @@ const BRIDGE_FIELDS: PackedStringArray = [
 	"settingsFileExists",
 	"settingsPersistent",
 	"deleteSaveButtonVisible",
+	"deleteSaveLabelScroll",
 	"confirmDeleteVisible",
 	"confirmDeleteMessage",
 	"saveFileExists",
@@ -551,7 +552,9 @@ func _on_back_pressed() -> void:
 ## dropdowns lived on Home, under the same names and meanings, so the checks that read them only
 ## had to change where they go to look. The delete-save fields came from Home the same way, and
 ## saveFileExists and rubles mean what the desktop's do, so a check can prove a deletion without
-## leaving this screen.
+## leaving this screen. deleteSaveLabelScroll is how many pixels Delete's label has scrolled - 0
+## wherever it fits - because Delete's is the column's longest label and the one French runs past
+## the button with; see marquee_button.gd.
 func _register_bridge_fields() -> void:
 	# The egon bot's bridge: there in repo runs and its debug exports, dropped from release builds.
 	var bridge := get_node_or_null("/root/EgonBridge")
@@ -603,6 +606,7 @@ func _register_bridge_fields() -> void:
 	bridge.register_field("settingsFileExists", func() -> bool: return bool(_settings.file_exists()))
 	bridge.register_field("settingsPersistent", func() -> bool: return bool(_settings.is_persistent()))
 	bridge.register_field("deleteSaveButtonVisible", func() -> bool: return _is_visible(_delete_save_button))
+	bridge.register_field("deleteSaveLabelScroll", func() -> int: return int(_delete_save_button.label_scroll()))
 	bridge.register_field("confirmDeleteVisible", func() -> bool: return _is_visible(_confirm_delete))
 	bridge.register_field("confirmDeleteMessage", func() -> String: return _confirm_message.text)
 	bridge.register_field("saveFileExists", func() -> bool: return _save_file_exists())

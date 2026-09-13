@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bkei2mdbwq5n" path="res://assets/images/main-menu-screen.png" id="2_screen"]
 [ext_resource type="Texture2D" uid="uid://brjtqoomubd61" path="res://assets/images/main-menu-title-text.png" id="3_title"]
 [ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="4_theme"]
+[ext_resource type="Script" uid="uid://c3b6e3eruvohi" path="res://src/marquee_button.gd" id="5_marquee"]
 
 [sub_resource type="Gradient" id="Gradient_scrim"]
 offsets = PackedFloat32Array(0, 0.1, 0.9, 1)
@@ -81,6 +82,7 @@ grow_horizontal = 2
 theme = ExtResource("4_theme")
 theme_override_font_sizes/font_size = 12
 text = "Start Game"
+script = ExtResource("5_marquee")
 
 [node name="SettingsButton" type="Button" parent="." unique_id=1612453656]
 layout_mode = 1
@@ -95,6 +97,7 @@ grow_horizontal = 2
 theme = ExtResource("4_theme")
 theme_override_font_sizes/font_size = 12
 text = "Settings"
+script = ExtResource("5_marquee")
 
 [node name="CreditsButton" type="Button" parent="." unique_id=57449258]
 layout_mode = 1
@@ -109,6 +112,7 @@ grow_horizontal = 2
 theme = ExtResource("4_theme")
 theme_override_font_sizes/font_size = 12
 text = "Credits"
+script = ExtResource("5_marquee")
 
 [node name="QuitButton" type="Button" parent="." unique_id=1275809838]
 layout_mode = 1
@@ -124,3 +128,4 @@ theme = ExtResource("4_theme")
 theme_type_variation = &"DangerousButton"
 theme_override_font_sizes/font_size = 12
 text = "Quit"
+script = ExtResource("5_marquee")

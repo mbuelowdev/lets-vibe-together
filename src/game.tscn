@@ -3,7 +3,16 @@
 [ext_resource type="Script" uid="uid://bengjj27rnu2g" path="res://src/game.gd" id="1_game"]
 [ext_resource type="PackedScene" path="res://src/taskbar.tscn" id="2_taskbar"]
 [ext_resource type="PackedScene" path="res://src/cs2_screen.tscn" id="3_cs2"]
+[ext_resource type="PackedScene" path="res://src/gaming_community_screen.tscn" id="6_gaming_community"]
+[ext_resource type="PackedScene" path="res://src/chrome_screen.tscn" id="7_chrome"]
+[ext_resource type="PackedScene" path="res://src/skills_screen.tscn" id="5_skills"]
+[ext_resource type="PackedScene" path="res://src/scammer_screen.tscn" id="8_scammer"]
+[ext_resource type="PackedScene" path="res://src/telephone_screen.tscn" id="9_telephone"]
+[ext_resource type="PackedScene" path="res://src/office_screen.tscn" id="10_office"]
+[ext_resource type="PackedScene" path="res://src/floorplanner_screen.tscn" id="11_floorplanner"]
 [ext_resource type="PackedScene" path="res://src/pause_menu.tscn" id="4_pause"]
+[ext_resource type="PackedScene" path="res://src/story_dialog.tscn" id="12_story"]
+[ext_resource type="PackedScene" path="res://src/debug_menu.tscn" id="13_debug"]
 
 [node name="Game" type="Node2D" unique_id=1797970087]
 script = ExtResource("1_game")
@@ -42,15 +51,53 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 2
 
+[node name="GamingCommunityScreen" parent="UI/Root" instance=ExtResource("6_gaming_community")]
+visible = false
+layout_mode = 1
+
+[node name="ChromeScreen" parent="UI/Root" instance=ExtResource("7_chrome")]
+visible = false
+layout_mode = 1
+
 [node name="Cs2Screen" parent="UI/Root" instance=ExtResource("3_cs2")]
+visible = false
+layout_mode = 1
+
+[node name="SkillsScreen" parent="UI/Root" instance=ExtResource("5_skills")]
+visible = false
+layout_mode = 1
+
+[node name="ScammerScreen" parent="UI/Root" instance=ExtResource("8_scammer")]
+visible = false
+layout_mode = 1
+
+[node name="TelephoneScreen" parent="UI/Root" instance=ExtResource("9_telephone")]
+visible = false
+layout_mode = 1
+
+[node name="OfficeScreen" parent="UI/Root" instance=ExtResource("10_office")]
+visible = false
+layout_mode = 1
+
+[node name="FloorplannerScreen" parent="UI/Root" instance=ExtResource("11_floorplanner")]
 visible = false
 layout_mode = 1
 
 [node name="Taskbar" parent="UI/Root" unique_id=696222013 instance=ExtResource("2_taskbar")]
 layout_mode = 1
 
+[node name="DebugMenu" parent="UI/Root" instance=ExtResource("13_debug")]
+visible = false
+layout_mode = 1
+
 [node name="PauseLayer" type="CanvasLayer" parent="." unique_id=1167045392]
 layer = 2
 
 [node name="PauseMenu" parent="PauseLayer" unique_id=1587720043 instance=ExtResource("4_pause")]
+visible = false
+
+[node name="StoryLayer" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="StoryDialog" parent="StoryLayer" instance=ExtResource("12_story")]
 visible = false

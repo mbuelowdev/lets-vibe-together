@@ -17,9 +17,8 @@ extends Control
 ## before this screen exists. There is nothing here to load; the "Loading" hold is theatre.
 ##
 ## Settings opens settings_screen.tscn - its own room art under a copy of this scrim - whose Back
-## button comes straight here again. Credits is wired and inert: it gets its own screen in the
-## roadmap's Horizon 1 task 4, and the button is here now so the menu does not change shape when
-## that lands.
+## button comes straight here again. Credits opens credits_screen.tscn, which stands on this
+## screen's own backdrop, and comes back the same way.
 ##
 ## Nothing here applies a saved setting. The Settings autoload reads the file and puts the saved
 ## locale into effect before any scene exists, so this screen only has to draw in whatever
@@ -33,6 +32,7 @@ extends Control
 
 const GAME_SCENE := "res://src/game.tscn"
 const SETTINGS_SCENE := "res://src/settings_screen.tscn"
+const CREDITS_SCENE := "res://src/credits_screen.tscn"
 
 ## What `screen` reports while this scene is up. game.gd registers the same field as "game", so a
 ## check can tell the two apart without knowing what either one draws.
@@ -216,11 +216,8 @@ func _open(scene_path: String) -> void:
 		push_error("main_menu: could not open %s (error %d)" % [scene_path, error])
 
 
-## Placeholder for the roadmap's Horizon 1 task 4, which gives Credits its own screen the way
-## Settings got one. Wired and inert rather than absent so the menu keeps its shape - and its
-## button positions, which the egon checks click - when that lands.
 func _on_credits_pressed() -> void:
-	pass
+	_open(CREDITS_SCENE)
 
 
 ## No save on the way out, unlike the pause menu's Save & Quit. Nothing reachable from this screen

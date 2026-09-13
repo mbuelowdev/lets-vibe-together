@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Skins and targets counters sit left of the ruble balance, and a first run holds none of either",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "await": "window.__egon.state().taskbarVisible", "equals": true },
+      { "expect": "window.__egon.state().taskbarUtilsOrder.join(',')", "equals": "skinsicon,skinscount,targetsicon,targetscount,money,moneysign,divider,volume,clock" },
+      { "expect": "window.__egon.state().skins", "equals": 0 },
+      { "expect": "window.__egon.state().targets", "equals": 0 },
+      { "expect": "window.__egon.state().skinsText", "equals": "0" },
+      { "expect": "window.__egon.state().targetsText", "equals": "0" },
+      { "expect": "window.__egon.state().countersMoneyGap", "equals": 12 },
+      { "expect": "window.__egon.state().taskbarUtilsClickable", "equals": false },
+      { "screenshot": "taskbar-counters" }
+    ]
+  },
+  {
+    "name": "Skins and targets are read from the save file at game start, and pack against a wider balance",
+    "scenario": "saved_counters",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "await": "window.__egon.state().targets", "equals": 1234 },
+      { "expect": "window.__egon.state().skins", "equals": 12 },
+      { "expect": "window.__egon.state().targetsText", "equals": "1  234" },
+      { "expect": "window.__egon.state().skinsText", "equals": "12" },
+      { "expect": "window.__egon.state().countersMatchState", "equals": true },
+      { "expect": "window.__egon.state().savedTargets", "equals": 1234 },
+      { "expect": "window.__egon.state().savedSkins", "equals": 12 },
+      { "expect": "window.__egon.state().moneyText", "equals": "1  234  567  ₽" },
+      { "expect": "window.__egon.state().countersMoneyGap", "equals": 12 },
+      { "screenshot": "taskbar-counters-loaded" }
+    ]
+  },
+  {
+    "name": "Finishing a CS2 match awards 1 to 4 targets, and they reach the save file",
+    "scenario": "no_save",
+    "proof": "screenshot",
+    "steps": [
+      { "await": "window.__egon.state().screen", "equals": "mainMenu" },
+      { "click": [320, 185] },
+      { "await": "window.__egon.state().screen", "equals": "game" },
+      { "await": "window.__egon.state().selectedApp", "equals": "steam" },
+      { "click": [112, 344] },
+      { "expect": "window.__egon.state().selectedApp", "equals": "cs2" },
+      { "expect": "window.__egon.state().cs2Stage", "equals": -1 },
+      { "click": [320, 180] },
+      { "expect": "window.__egon.state().cs2Stage", "equals": 0 },
+      { "await": "window.__egon.state().cs2Stage", "equals": 5, "timeout_ms": 25000 },
+      { "expect": "window.__egon.state().targets", "equals": 0 },
+      { "await": "window.__egon.state().cs2Stage", "equals": -1, "timeout_ms": 20000 },
+      { "expect": "window.__egon.state().targets", "at_least": 1 },
+      { "expect": "window.__egon.state().targets", "at_most": 4 },
+      { "await": "window.__egon.state().savedTargets", "at_least": 1 },
+      { "expect": "window.__egon.state().countersMatchState", "equals": true },
+      { "screenshot": "cs2-match-awards-targets" }
+    ]
+  }
+]

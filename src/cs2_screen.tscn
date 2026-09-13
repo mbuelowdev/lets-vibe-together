@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://src/cs2_screen.gd" id="1_cs2"]
 [ext_resource type="Theme" uid="uid://dm3nk3u7xv065" path="res://resources/theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://c3b6e3eruvohi" path="res://src/marquee_button.gd" id="3_marquee"]
 
 [node name="Cs2Screen" type="Control"]
 layout_mode = 3
@@ -29,6 +30,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 theme_override_font_sizes/font_size = 12
 text = "Queue for match"
+script = ExtResource("3_marquee")
 
 [node name="StagePanel" type="ColorRect" parent="."]
 visible = false

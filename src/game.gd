@@ -5,15 +5,37 @@ extends Node2D
 ## knowing what any of them contains.
 const SCREEN_ID := "game"
 
+## The backdrop behind an app with nothing on it yet: a flat dark grey, off the palette on
+## purpose, so an unfinished app reads as unfinished. Placeholder, like the icon those apps
+## borrow - see taskbar.gd's APP_ICON_ROWS.
+const PLACEHOLDER_BACKGROUND := Color("#232323")
+
 ## One per app the taskbar can select. Home is not one: its icon opens the pause menu instead of a
-## screen, so the desktop always shows one of these. Chrome's is the yellow of its logo.
+## screen, so the desktop always shows one of these. Chrome's is the yellow of its logo; the rest
+## are the palette in docs/GAME_DECISIONS.md, Skills on its green.
 const APP_BACKGROUNDS := {
-	"steam": Color("#1b2838"),
+	"gaming_community": Color("#1b2838"),
 	"chrome": Color("#fbbc04"),
 	"cs2": Color("#6e3a3a"),
+	"skills": Color("#3f6b3a"),
+	"scammer": PLACEHOLDER_BACKGROUND,
+	"telephone": PLACEHOLDER_BACKGROUND,
+	"office": PLACEHOLDER_BACKGROUND,
+	"floorplanner": PLACEHOLDER_BACKGROUND,
+}
+
+## The apps that are a taskbar slot and a backdrop and nothing else yet, against the node under
+## UI/Root each one shows. They have no labels, no counters and nothing running while hidden, so
+## unlike the four above they need no line of their own anywhere below.
+const PLACEHOLDER_SCREENS := {
+	"scammer": "ScammerScreen",
+	"telephone": "TelephoneScreen",
+	"office": "OfficeScreen",
+	"floorplanner": "FloorplannerScreen",
 }
 
 const APP_SCREEN_TEXTURES := {
+	"gaming_community": "res://assets/images/gamer-community-screen.png",
 	"cs2": "res://assets/images/screen-base-cs2.png",
 }
 
@@ -53,6 +75,14 @@ const BRIDGE_FIELDS: PackedStringArray = [
 	"moneyText",
 	"moneyMatchesState",
 	"moneySignDrop",
+	"skins",
+	"targets",
+	"savedSkins",
+	"savedTargets",
+	"skinsText",
+	"targetsText",
+	"countersMatchState",
+	"countersMoneyGap",
 	"clockText",
 	"clockMatchesSystemTime",
 	"volumeIconColumn",
@@ -69,25 +99,42 @@ const BRIDGE_FIELDS: PackedStringArray = [
 	"focusedApp",
 	"musicTrack",
 	"musicMuffled",
+	"cs2Stage",
+	"skillsScreenVisible",
+	"unlockedSkills",
+	"moneyGainMultiplier",
 ]
 
 var _app_switch_count: int = 0
 var _background: ColorRect
 var _screen: TextureRect
+var _gaming_community_screen: Control
+var _chrome_screen: Control
 var _cs2_screen: Control
+var _skills_screen: Control
+## PLACEHOLDER_SCREENS' app id against the node it names.
+var _placeholder_screens: Dictionary = {}
 var _taskbar: Control
 var _pause_menu: Control
+var _debug_menu: Control
 var _screen_textures: Dictionary = {}
 
 
 func _ready() -> void:
 	_background = $UI/Root/Background
 	_screen = $UI/Root/Screen
+	_gaming_community_screen = $UI/Root/GamingCommunityScreen
+	_chrome_screen = $UI/Root/ChromeScreen
 	_cs2_screen = $UI/Root/Cs2Screen
+	_skills_screen = $UI/Root/SkillsScreen
+	for app_id in PLACEHOLDER_SCREENS:
+		_placeholder_screens[app_id] = $UI/Root.get_node(String(PLACEHOLDER_SCREENS[app_id]))
 	_taskbar = $UI/Root/Taskbar
 	_pause_menu = $PauseLayer/PauseMenu
+	_debug_menu = $UI/Root/DebugMenu
 	_taskbar.app_selected.connect(_on_app_selected)
 	_taskbar.home_pressed.connect(_on_home_pressed)
+	_taskbar.clock_pressed.connect(_debug_menu.toggle)
 	_pause_menu.settings_closed.connect(_on_pause_settings_closed)
 	_apply_app(_taskbar.selected_app_id())
 	_play_music()
@@ -142,8 +189,20 @@ func _apply_app(app_id: String) -> void:
 	if APP_BACKGROUNDS.has(app_id):
 		_background.color = APP_BACKGROUNDS[app_id]
 	_apply_app_screen(app_id)
+	# Gaming Community and Chrome only ever act on input, so unlike the two below there is nothing
+	# to them while they are hidden. Chat windows stay where they were dragged.
+	_gaming_community_screen.visible = app_id == "gaming_community"
+	_chrome_screen.visible = app_id == "chrome"
 	# Hidden, not stopped: a match queued on CS2 plays on while another app is up.
 	_cs2_screen.visible = app_id == "cs2"
+	# Same for the skills screen, which recentres its tree on the start node each time it comes
+	# up. Skill effects are the Skills autoload's, not this screen's, so they apply whether the
+	# tree is on screen or not.
+	_skills_screen.visible = app_id == "skills"
+	# Empty screens: they draw nothing, so showing one is only the backdrop above plus whichever
+	# node the app will grow into.
+	for placeholder_id in _placeholder_screens:
+		_placeholder_screens[placeholder_id].visible = app_id == placeholder_id
 
 
 func _apply_app_screen(app_id: String) -> void:
@@ -183,6 +242,8 @@ func _load_screen_texture(path: String) -> Texture2D:
 ## `screen`, `focusedControl`, `locale`, `rubles` and `saveFileExists` off the bridge - names this
 ## scene registers too - so they go back. It may also have changed the locale.
 func _on_pause_settings_closed() -> void:
+	_gaming_community_screen.refresh_labels()
+	_chrome_screen.refresh_labels()
 	_cs2_screen.refresh_labels()
 	_register_bridge_fields()
 
@@ -211,6 +272,14 @@ func _register_bridge_fields() -> void:
 	bridge.register_field("moneyText", func() -> String: return _taskbar.money_text())
 	bridge.register_field("moneyMatchesState", func() -> bool: return _taskbar.money_matches_state())
 	bridge.register_field("moneySignDrop", func() -> int: return _taskbar.money_sign_drop())
+	bridge.register_field("skins", func() -> int: return _game_state_value(&"skins", 0))
+	bridge.register_field("targets", func() -> int: return _game_state_value(&"targets", 0))
+	bridge.register_field("savedSkins", func() -> int: return _game_state_value(&"last_saved_skins", -1))
+	bridge.register_field("savedTargets", func() -> int: return _game_state_value(&"last_saved_targets", -1))
+	bridge.register_field("skinsText", func() -> String: return _taskbar.skins_text())
+	bridge.register_field("targetsText", func() -> String: return _taskbar.targets_text())
+	bridge.register_field("countersMatchState", func() -> bool: return _taskbar.counters_match_state())
+	bridge.register_field("countersMoneyGap", func() -> int: return _taskbar.counters_money_gap())
 	bridge.register_field("clockText", func() -> String: return _taskbar.clock_text())
 	bridge.register_field("clockMatchesSystemTime", func() -> bool: return _taskbar.clock_matches_system_time())
 	bridge.register_field("volumeIconColumn", func() -> int: return _taskbar.volume_icon_column())
@@ -227,6 +296,10 @@ func _register_bridge_fields() -> void:
 	bridge.register_field("focusedApp", func() -> String: return _taskbar.focused_app_id())
 	bridge.register_field("musicTrack", func() -> String: return _music_track())
 	bridge.register_field("musicMuffled", func() -> bool: return _music_muffled())
+	bridge.register_field("cs2Stage", func() -> int: return _cs2_screen.stage())
+	bridge.register_field("skillsScreenVisible", func() -> bool: return _skills_screen.is_visible_in_tree())
+	bridge.register_field("unlockedSkills", func() -> Array: return _unlocked_skills())
+	bridge.register_field("moneyGainMultiplier", func() -> float: return _money_gain_multiplier())
 
 
 ## The Music autoload's own state rather than anything this scene keeps, so a check can tell the
@@ -253,6 +326,28 @@ func _game_state_rubles() -> int:
 func _last_saved_rubles() -> int:
 	var state := get_node_or_null("/root/GameState")
 	return -1 if state == null else int(state.last_saved_rubles())
+
+
+## Skins and targets, and what the last write put on disk for each, read off the autoload the same
+## way as the balance. `fallback` stands in for a missing GameState, as 0 and -1 do above.
+func _game_state_value(method: StringName, fallback: int) -> int:
+	var state := get_node_or_null("/root/GameState")
+	return fallback if state == null else int(state.call(method))
+
+
+## The player's unlocked skills, sorted, as a plain Array - the bridge pushes its fields through
+## JSON, which a PackedStringArray does not survive.
+func _unlocked_skills() -> Array:
+	var state := get_node_or_null("/root/GameState")
+	return [] if state == null else Array(state.unlocked_skills())
+
+
+## What the unlocked skills currently do to money the player earns: 1.0 with none of them, 1.05
+## with a +5% skill. Read off the Skills autoload rather than recomputed here, so a check proves
+## the runtime the game actually pays out through.
+func _money_gain_multiplier() -> float:
+	var skills := get_node_or_null("/root/Skills")
+	return 1.0 if skills == null else float(skills.multiplier(skills.Catalog.MOD_MONEY_GAIN))
 
 
 ## Lets a check await the coalesced write rather than guess at its timing.
