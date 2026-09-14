@@ -30,7 +30,8 @@ extends Node
 ## Emitted only when the balance actually changes, so listeners can redraw unconditionally.
 signal rubles_changed(rubles: int)
 
-## The same contract for the two counts the taskbar draws left of the balance.
+## The same contract for the two counts the taskbar draws left of the balance. skins_changed
+## also fires when a load swaps the collection for another of the same size.
 signal skins_changed(skins: int)
 signal targets_changed(targets: int)
 
@@ -119,15 +120,31 @@ const SAVE_KEY_STORY_PENDING := "pending_story"
 ## Who each target is, oldest first. See _target_profiles below.
 const SAVE_KEY_TARGET_PROFILES := "target_profiles"
 
+## The skin collection, oldest first, and the id the next skin gets. Saves from before skins were
+## objects hold a bare "skins" count instead, which is no longer read: those skins are dropped.
+const SAVE_KEY_SKINS := "skin_items"
+## Ids of skins the player has not looked at yet. See _new_skin_ids below.
+const SAVE_KEY_NEW_SKINS := "new_skin_ids"
+const SAVE_KEY_NEXT_SKIN_ID := "next_skin_id"
+
 const TargetProfiles := preload("res://src/target_profiles.gd")
+const SkinItems := preload("res://src/skin_items.gd")
 
 ## Seconds between autosaves while the state keeps changing. Short enough that a crash costs
 ## nothing anyone would notice, long enough that a run of purchases is one write.
 const SAVE_INTERVAL := 1.0
 
 var _rubles: int = STARTING_RUBLES
-var _skins: int = 0
 var _targets: int = 0
+
+## Every skin the player owns, oldest first, as SkinItems dictionaries. Ids are unique for the
+## life of the save: _next_skin_id only ever grows, so a sold skin's id is never handed out again.
+var _skins: Array[Dictionary] = []
+var _next_skin_id := 1
+
+## Skins gained since the player last hovered them in the Chrome gallery, as a set: id -> true.
+## Saved, so a skin traded for while Chrome is closed is still new the next time it opens.
+var _new_skin_ids: Dictionary = {}
 
 ## One profile per target, oldest first, always exactly _targets long: a target earned appends a
 ## made-up profile and a target spent drops the newest. Saved, so a target keeps its name and
@@ -241,7 +258,11 @@ func load_game() -> void:
 		push_warning("GameState: ignoring save version %d, expected %d" % [version, SAVE_VERSION])
 		return
 	set_rubles(int(config.get_value(SAVE_SECTION, "rubles", STARTING_RUBLES)))
-	set_skins(int(config.get_value(SAVE_SECTION, "skins", 0)))
+	_load_skins(
+		config.get_value(SAVE_SECTION, SAVE_KEY_SKINS, []),
+		int(config.get_value(SAVE_SECTION, SAVE_KEY_NEXT_SKIN_ID, 1)),
+		config.get_value(SAVE_SECTION, SAVE_KEY_NEW_SKINS, PackedInt64Array()),
+	)
 	_target_profiles.clear()
 	for saved in config.get_value(SAVE_SECTION, SAVE_KEY_TARGET_PROFILES, []):
 		var profile := TargetProfiles.from_saved(saved)
@@ -272,7 +293,9 @@ func save_game() -> void:
 	var config := ConfigFile.new()
 	config.set_value(SAVE_SECTION, "version", SAVE_VERSION)
 	config.set_value(SAVE_SECTION, "rubles", _rubles)
-	config.set_value(SAVE_SECTION, "skins", _skins)
+	config.set_value(SAVE_SECTION, SAVE_KEY_SKINS, _skins)
+	config.set_value(SAVE_SECTION, SAVE_KEY_NEXT_SKIN_ID, _next_skin_id)
+	config.set_value(SAVE_SECTION, SAVE_KEY_NEW_SKINS, new_skin_ids())
 	config.set_value(SAVE_SECTION, "targets", _targets)
 	config.set_value(SAVE_SECTION, SAVE_KEY_TARGET_PROFILES, _target_profiles)
 	config.set_value(SAVE_SECTION, SAVE_KEY_SKILLS, unlocked_skills())
@@ -362,7 +385,7 @@ func _mark_clean(on_disk: bool) -> void:
 	_dirty = false
 	_time_since_save = 0.0
 	_last_saved_rubles = _rubles if on_disk else -1
-	_last_saved_skins = _skins if on_disk else -1
+	_last_saved_skins = _skins.size() if on_disk else -1
 	_last_saved_targets = _targets if on_disk else -1
 	_last_saved_skills = unlocked_skills() if on_disk else PackedStringArray()
 
@@ -405,24 +428,98 @@ func spend_rubles(cost: int) -> bool:
 	return true
 
 
+## How many skins the player owns - the number on the taskbar.
 func skins() -> int:
-	return _skins
+	return _skins.size()
 
 
-## Clamped to [0, MAX_COUNT] and emits only on a real change, like set_rubles(). Nothing awards
-## or spends skins yet.
+## The collection, oldest first. The array is a copy; the skins in it are read-only.
+func skin_items() -> Array[Dictionary]:
+	return _skins.duplicate()
+
+
+## The skin with this id, or an empty Dictionary when the player does not own it.
+func skin_item(id: int) -> Dictionary:
+	for skin in _skins:
+		if skin["id"] == id:
+			return skin
+	return {}
+
+
+## Grow the collection to `amount` with freshly rolled skins, or shrink it by dropping the newest.
+## Clamped to [0, MAX_COUNT] and emits only on a real change, like set_rubles().
 func set_skins(amount: int) -> void:
 	var clamped := clampi(amount, 0, MAX_COUNT)
-	if clamped == _skins:
+	if clamped == _skins.size():
 		return
-	_skins = clamped
+	while _skins.size() > clamped:
+		_new_skin_ids.erase(_skins.pop_back()["id"])
+	while _skins.size() < clamped:
+		_skins.append(SkinItems.random_skin(_next_skin_id))
+		_new_skin_ids[_next_skin_id] = true
+		_next_skin_id += 1
 	_mark_dirty()
-	skins_changed.emit(_skins)
+	skins_changed.emit(_skins.size())
 
 
-## Positive to award, negative to take away.
+## Positive to award that many random skins, negative to take away the newest.
 func add_skins(amount: int) -> void:
-	set_skins(_skins + amount)
+	set_skins(_skins.size() + amount)
+
+
+## Take one particular skin out of the collection, e.g. sold. False when the player does not own it.
+func remove_skin(id: int) -> bool:
+	for i in _skins.size():
+		if _skins[i]["id"] == id:
+			_skins.remove_at(i)
+			_new_skin_ids.erase(id)
+			_mark_dirty()
+			skins_changed.emit(_skins.size())
+			return true
+	return false
+
+
+## True while the player has not hovered this skin since gaining it.
+func is_skin_new(id: int) -> bool:
+	return _new_skin_ids.has(id)
+
+
+func new_skin_ids() -> PackedInt64Array:
+	var ids := PackedInt64Array(_new_skin_ids.keys())
+	ids.sort()
+	return ids
+
+
+## The player has seen this skin. False when it was not new to begin with.
+func mark_skin_seen(id: int) -> bool:
+	if not _new_skin_ids.erase(id):
+		return false
+	_mark_dirty()
+	return true
+
+
+func _load_skins(saved_skins: Variant, next_id: int, saved_new_ids: Variant) -> void:
+	var loaded: Array[Dictionary] = []
+	var ids := {}
+	if typeof(saved_skins) == TYPE_ARRAY:
+		for saved in saved_skins:
+			var skin := SkinItems.from_saved(saved)
+			if skin.is_empty() or ids.has(skin["id"]) or loaded.size() >= MAX_COUNT:
+				continue
+			ids[skin["id"]] = true
+			loaded.append(skin)
+			next_id = maxi(next_id, skin["id"] + 1)
+	_next_skin_id = maxi(next_id, 1)
+	_new_skin_ids.clear()
+	if typeof(saved_new_ids) in [TYPE_PACKED_INT64_ARRAY, TYPE_PACKED_INT32_ARRAY, TYPE_ARRAY]:
+		for id in saved_new_ids:
+			if typeof(id) == TYPE_INT and ids.has(id):
+				_new_skin_ids[id] = true
+	if loaded == _skins:
+		return
+	_skins = loaded
+	_mark_dirty()
+	skins_changed.emit(_skins.size())
 
 
 func targets() -> int:
@@ -645,6 +742,8 @@ func _replace_id_set(id_set: Dictionary, ids) -> bool:
 func reset() -> void:
 	set_rubles(STARTING_RUBLES)
 	set_skins(0)
+	_next_skin_id = 1
+	_new_skin_ids.clear()
 	set_targets(0)
 	clear_skills()
 	clear_story_segments()
